@@ -452,7 +452,7 @@
           <a href="#services">Services</a>
           <a href="#contact">Contact</a>
         </div>
-        <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
+        <button class="hamburger" id="hamburgerBtn" aria-label="Menu" onclick="toggleMenu()" style="position:relative;z-index:1000;">
           <span></span>
           <span></span>
           <span></span>
@@ -848,6 +848,33 @@
   </footer>
 
   <script>
+    // Global toggle function - called by onclick
+    function toggleMenu() {
+      console.log('toggleMenu called!');
+      const mobileNav = document.getElementById('mobileNav');
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      
+      if (!mobileNav || !hamburgerBtn) {
+        console.error('Elements not found!');
+        return;
+      }
+      
+      const isHidden = mobileNav.style.display === 'none' || !mobileNav.style.display;
+      console.log('Is hidden:', isHidden);
+      
+      if (isHidden) {
+        mobileNav.style.display = 'flex';
+        mobileNav.style.opacity = '1';
+        mobileNav.style.pointerEvents = 'auto';
+        hamburgerBtn.classList.add('active');
+      } else {
+        mobileNav.style.display = 'none';
+        mobileNav.style.opacity = '0';
+        mobileNav.style.pointerEvents = 'none';
+        hamburgerBtn.classList.remove('active');
+      }
+    }
+    
     document.addEventListener('DOMContentLoaded', function() {
       // Scroll to top on page load
       window.scrollTo(0, 0);
@@ -856,58 +883,23 @@
       const yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-      // Hamburger Menu Toggle - SIMPLIFIED
-      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      // Close menu when link is clicked
       const mobileNav = document.getElementById('mobileNav');
-      
-      console.log('Hamburger button:', hamburgerBtn);
-      console.log('Mobile nav:', mobileNav);
-      
-      if (hamburgerBtn && mobileNav) {
-        // Initialize menu as closed
+      if (mobileNav) {
+        // Initialize as closed
         mobileNav.style.display = 'none';
         
-        hamburgerBtn.addEventListener('click', function(e) {
-          console.log('Hamburger clicked!');
-          e.preventDefault();
-          e.stopPropagation();
-          
-          const isHidden = mobileNav.style.display === 'none';
-          console.log('Menu is hidden:', isHidden);
-          
-          if (isHidden) {
-            mobileNav.style.display = 'flex';
-            mobileNav.style.opacity = '1';
-            mobileNav.style.pointerEvents = 'auto';
-            hamburgerBtn.classList.add('active');
-            console.log('Opening menu');
-          } else {
-            mobileNav.style.display = 'none';
-            mobileNav.style.opacity = '0';
-            mobileNav.style.pointerEvents = 'none';
-            hamburgerBtn.classList.remove('active');
-            console.log('Closing menu');
-          }
-        }, true);
-        
-        // Close menu when link is clicked
-        const menuLinks = mobileNav.querySelectorAll('a');
-        console.log('Menu links found:', menuLinks.length);
-        menuLinks.forEach(link => {
+        mobileNav.querySelectorAll('a').forEach(link => {
           link.addEventListener('click', function() {
-            console.log('Menu link clicked');
             mobileNav.style.display = 'none';
             mobileNav.style.opacity = '0';
             mobileNav.style.pointerEvents = 'none';
-            hamburgerBtn.classList.remove('active');
+            document.getElementById('hamburgerBtn').classList.remove('active');
           });
         });
-      } else {
-        console.error('Hamburger button or mobile nav not found!');
       }
 
       // Reveal on scroll
-      const revealEls = document.querySelectorAll('.reveal');
       const io = new IntersectionObserver((entries)=>{
         entries.forEach(e=>{
           if(e.isIntersecting){
