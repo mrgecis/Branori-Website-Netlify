@@ -69,7 +69,7 @@
       -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; overflow-x:hidden;
     }
     /* Background orbs (parallax) */
-    .orbs{position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden}
+    .orbs{position:fixed; inset:0; pointer-events:none; z-index:-1; overflow:hidden}
     .orb{position:absolute; border-radius:999px; filter:blur(70px); opacity:.45; mix-blend:screen; transform:translateZ(0)}
     .orb.a{width:560px;height:560px;left:-140px;top:-160px;background:radial-gradient(60% 60% at 50% 50%, var(--brand1), rgba(177,200,255,0));}
     .orb.b{width:620px;height:620px;right:-180px;bottom:-120px;background:radial-gradient(60% 60% at 50% 50%, #ff8db3, rgba(255,141,179,0));}
@@ -80,7 +80,7 @@
     .container{max-width:1200px;margin:0 auto;padding:0 20px}
     nav{height:68px; display:flex; align-items:center; justify-content:space-between}
     /* Main content above orbs */
-    main { position: relative; z-index: 2; }
+    main { position: relative; z-index: 1; }
     .brand{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.4px}
     .badge{width:38px;height:38px;border-radius:14px;background:rgba(255,255,255,.08);
       border:1px solid var(--border); display:grid;place-items:center; box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
