@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Branori — AI‑Powered Distressed M&A for Private Equity</title>
+  <meta name="description" content="Branori is an AI‑powered M&A and restructuring advisory for Private Equity investors focused on distressed buy‑outs, carve‑outs, and negative purchase price situations across Europe, Asia, and the USA." />
+  <style>
+    :root{
+      --bg:#070b11;
+      --text:#fff;
+      --muted:rgba(255,255,255,.72);
+      --glass:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.15);
+      --brand1:#b1c8ff;
+      --brand2:#cabdff;
+      --brand3:#ffc9a3;
+      --ok:#7ef0b9;
+      --warn:#ffd479;
+      --bad:#ff98a2;
+    }
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; overflow-x:hidden;
+    }
+    /* Background orbs (parallax) */
+    .orbs{position:fixed; inset:0; pointer-events:none; z-index:-1; overflow:hidden}
+    .orb{position:absolute; border-radius:999px; filter:blur(70px); opacity:.45; mix-blend:screen; transform:translateZ(0)}
+    .orb.a{width:560px;height:560px;left:-140px;top:-160px;background:radial-gradient(60% 60% at 50% 50%, var(--brand1), rgba(177,200,255,0));}
+    .orb.b{width:620px;height:620px;right:-180px;bottom:-120px;background:radial-gradient(60% 60% at 50% 50%, #ff8db3, rgba(255,141,179,0));}
+    .orb.c{width:720px;height:720px;left:50%;top:45%;transform:translate(-50%,-45%);opacity:.28;background:radial-gradient(60% 60% at 50% 50%, var(--brand2), rgba(202,189,255,0));}
+    /* Sticky nav */
+    header{position:fixed; top:0; left:0; right:0; z-index:100; backdrop-filter:saturate(130%) blur(12px);
+      background:linear-gradient(to bottom, rgba(7,11,17,.75), rgba(7,11,17,.35)); border-bottom:1px solid rgba(255,255,255,.06)}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    nav{height:68px; display:flex; align-items:center; justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.4px}
+    .badge{width:38px;height:38px;border-radius:14px;background:rgba(255,255,255,.08);
+      border:1px solid var(--border); display:grid;place-items:center; box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
+    .badge svg{width:18px;height:18px;opacity:.9}
+    .nav a{color:var(--muted);text-decoration:none;margin-left:22px;font-size:14px}
+    .nav a:hover{color:#fff}
+    .call-top{margin-left:16px; padding:10px 14px; border-radius:14px; text-decoration:none; color:#fff;
+      border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.1)}
+    .call-top:hover{background:rgba(255,255,255,.16)}
+    /* Hero */
+    .hero{padding:160px 0 40px}
+    .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
+    @media (max-width: 950px){ .hero-grid{grid-template-columns:1fr} }
+    .chip{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.8);font-size:12px;border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+    h1{font-size:46px; line-height:1.08; margin:12px 0 8px}
+    .grad{background:linear-gradient(90deg, var(--brand1), var(--brand2), var(--brand3)); -webkit-background-clip:text; background-clip:text; color:transparent}
+    .sub{color:var(--muted); max-width:720px}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:14px;text-decoration:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);color:#fff}
+    .btn:hover{background:rgba(255,255,255,.18)}
+    .btn.ghost{background:transparent;border-color:rgba(255,255,255,.14)}
+    .btn.ghost:hover{background:rgba(255,255,255,.08)}
+    /* Glass dashboard */
+    .window{position:relative;border-radius:26px;background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14); backdrop-filter: blur(16px);
+      padding:18px; box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.05);}
+    .window-inner{border-radius:22px;border:1px solid rgba(255,255,255,.14);
+      background:rgba(15,20,28,.35); padding:22px; min-height:320px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);}
+    .win-top{display:flex;align-items:center;justify-content:space-between;color:rgba(255,255,255,.85);font-size:14px}
+    .win-dots{display:flex;gap:10px}
+    .dot{width:12px;height:12px;border-radius:999px}
+    .dot.r{background:var(--bad)}.dot.y{background:var(--warn)}.dot.g{background:var(--ok)}
+    .seg{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:16px}
+    .pill{border-radius:18px; padding:16px; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.06); transition:transform .2s ease, background .2s ease}
+    .pill:hover{transform:translateY(-2px); background:rgba(255,255,255,.1)}
+    .pill .l{font-size:13px;opacity:.7}
+    .pill .t{margin-top:6px;font-size:20px;font-weight:700}
+    .panel{margin-top:18px;height:150px;border-radius:18px;border:1px solid rgba(255,255,255,.16);
+      background:linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,0)); position:relative; overflow:hidden}
+    .spark{position:absolute; inset:auto 0 0 0; height:2px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.8), transparent); animation:spark 3.5s linear infinite}
+    @keyframes spark{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+    @keyframes lineWave{0%{stroke-dasharray:0,500;stroke-dashoffset:0}50%{stroke-dasharray:500,500;stroke-dashoffset:0}100%{stroke-dasharray:500,500;stroke-dashoffset:-500}}
+    @keyframes areaWave{0%{opacity:.3}50%{opacity:.6}100%{opacity:.3}}
+    @keyframes rotateCW{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes rotateCCW{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
+    @keyframes glow{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}
+    /* Sections */
+    section{padding:70px 0}
+    .title{font-size:28px;margin:0 0 6px}
+    .subt{color:var(--muted);margin-top:4px}
+    /* Services */
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    @media (max-width: 980px){ .cards{grid-template-columns:1fr 1fr} }
+    @media (max-width: 640px){ .cards{grid-template-columns:1fr} }
+    .card{border-radius:18px;background:var(--glass);border:1px solid var(--border);padding:20px;backdrop-filter: blur(12px); transition:transform .25s ease, background .25s ease}
+    .card:hover{transform:translateY(-3px); background:rgba(255,255,255,.09)}
+    .icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid var(--border); margin-bottom:10px}
+    .icon svg{width:26px;height:26px;opacity:.9}
+    /* Playbook strip */
+    .strip{border-radius:20px;border:1px solid var(--border); background:rgba(255,255,255,.06); padding:18px; overflow:hidden}
+    .marquee{display:flex;gap:12px; width:max-content; animation:slide 28s linear infinite; padding:4px 2px}
+    .tag{display:inline-flex;align-items:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);white-space:nowrap;font-size:14px}
+    @keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+    /* Momentum (distressed focus) */
+    .momentum{position:relative;border-radius:26px;padding:28px;background:var(--glass);border:1px solid var(--border);backdrop-filter:blur(14px);overflow:hidden}
+    .blob{position:absolute;border-radius:999px;filter:blur(70px);opacity:.35;mix-blend:screen}
+    .b1{width:380px;height:380px;left:-80px;top:-60px;background:radial-gradient(circle at 30% 30%, var(--brand1), rgba(106,168,255,0)); animation: float1 18s ease-in-out infinite}
+    .b2{width:420px;height:420px;right:-120px;bottom:-100px;background:radial-gradient(circle at 60% 60%, #ff8db3, rgba(255,141,179,0)); animation: float2 22s ease-in-out infinite}
+    @keyframes float1{0%{transform:translateY(0)}50%{transform:translateY(18px)}100%{transform:translateY(0)}}
+    @keyframes float2{0%{transform:translate(0,0)}50%{transform:translate(-20px,10px)}100%{transform:translate(0,0)}}
+    .mom-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center}
+    @media (max-width: 950px){ .mom-grid{grid-template-columns:1fr} }
+    .pillx{display:inline-flex;align-items:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);white-space:nowrap;font-size:14px;margin:6px 6px 0 0}
+    .callout{border-radius:18px;border:1px solid var(--border);background:rgba(255,255,255,.06);padding:16px}
+    /* Work */
+    .work-head{display:flex;align-items:center;justify-content:space-between;gap:60px;margin-bottom:60px;flex-wrap:nowrap}
+    .work-head h2{flex-shrink:0}
+    .work-head .subt{text-align:right;flex-shrink:0}
+    .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:48px}
+    @media (max-width: 980px){ .work-grid{grid-template-columns:1fr 1fr} }
+    @media (max-width: 680px){ .work-grid{grid-template-columns:1fr} }
+    .work-card{position:relative;border-radius:18px;background:var(--glass);border:1px solid var(--border);padding:28px;backdrop-filter: blur(12px);min-height:220px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .25s ease, background .25s ease, box-shadow .25s ease}
+    .work-card:hover{transform:translateY(-3px); background:rgba(255,255,255,.09); box-shadow:0 10px 30px rgba(0,0,0,.25)}
+    .thumb{border-radius:14px;border:1px solid var(--border);height:140px;background:linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,0));}
+    .meta{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+    .arrow{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;border:1px solid rgba(255,255,255,.18);}
+    .arrow svg{width:16px;height:16px;stroke-width:1.7}
+    /* Contact */
+    .contact{border-radius:22px;background:var(--glass);border:1px solid var(--border);padding:22px}
+    .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    /* Footer */
+    footer{border-top:1px solid rgba(255,255,255,.08)}
+    .ft{display:flex;gap:18px;align-items:center;justify-content:space-between;color:rgba(255,255,255,.65);font-size:14px;padding:26px 0;flex-wrap:wrap}
+    .ft a{color:inherit;text-decoration:none}
+    .ft a:hover{color:#fff}
+    /* Reveal on scroll */
+    .reveal{opacity:0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease}
+    .reveal.visible{opacity:1; transform: translateY(0)}
+    a:focus-visible, button:focus-visible{outline:2px solid #9ec5ff; outline-offset:2px; border-radius:10px}
+    /* Progressive Contact Card: minimal, relies on existing tokens */
+    #contactCard .pc-field{display:grid;gap:8px;margin-bottom:12px}
+    #contactCard label{font-size:12px;color:rgba(255,255,255,.7)}
+    #contactCard input{
+      appearance:none; border-radius:14px; border:1px solid var(--border);
+      background:rgba(255,255,255,.06); color:#fff; padding:12px 14px;
+      outline:none; transition:border-color .2s ease, background .2s ease, box-shadow .2s ease
+    }
+    #contactCard input::placeholder{color:rgba(255,255,255,.45)}
+    #contactCard input:focus{border-color:rgba(177,200,255,.5); box-shadow:0 0 0 3px rgba(177,200,255,.12)}
+    #contactCard .pc-hint{margin:10px 2px 0; font-size:12px; color:var(--muted)}
+    #contactCard .pc-actions{display:flex; gap:10px; margin:4px 0 0}
+    #contactCard .pc-success{
+      display:flex; align-items:center; gap:10px; margin:4px 0 12px;
+      padding:12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.06)
+    }
+    /* Step transitions (fade/slide) */
+    #contactCard .pc-step{opacity:0; transform:translateY(6px); transition:opacity .28s ease, transform .28s ease}
+    #contactCard .pc-step.pc-show{opacity:1; transform:translateY(0)}
+    /* Restructuring Flow Animation */
+    #restructuring {padding:100px 0; position:relative;}
+    #restructuring .flow {position:relative; display:flex; justify-content:space-between; align-items:center; margin-top:80px; gap:20px;}
+    #restructuring .flow-line {position:absolute; top:50%; left:0; right:0; height:1px; background:linear-gradient(90deg, transparent, rgba(177,200,255,.3), transparent); transform:translateY(-50%);}
+    #restructuring .flow-step {position:relative; text-align:center; z-index:2; flex:1; display:flex; flex-direction:column; align-items:center;}
+    #restructuring .flow-step .icon {
+      width:70px; height:70px; border-radius:50%; margin:0 auto 18px; display:grid; place-items:center;
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); backdrop-filter:blur(20px);
+      transition:all .5s cubic-bezier(.4,.0,.2,1);
+      position:relative;
+    }
+    #restructuring .flow-step .icon svg {width:32px;height:32px;stroke:rgba(255,255,255,.6); transition:stroke .5s ease;}
+    #restructuring .flow-step.active .icon {
+      background:linear-gradient(135deg, rgba(177,200,255,.25), rgba(202,189,255,.15));
+      border-color:rgba(177,200,255,.6);
+      box-shadow:0 0 30px rgba(177,200,255,.4), inset 0 0 20px rgba(177,200,255,.1);
+      transform:scale(1.15);
+    }
+    #restructuring .flow-step.active .icon svg {stroke:var(--brand1); filter:drop-shadow(0 0 8px rgba(177,200,255,.5));}
+    #restructuring .flow-step .label {color:rgba(255,255,255,.65); font-size:14px; letter-spacing:.3px; font-weight:500; transition:color .5s ease;}
+    #restructuring .flow-step.active .label {color:var(--brand1); font-weight:600;}
+    @keyframes softPulse {0%,100%{box-shadow:0 0 30px rgba(177,200,255,.4), inset 0 0 20px rgba(177,200,255,.1)}50%{box-shadow:0 0 40px rgba(177,200,255,.6), inset 0 0 25px rgba(177,200,255,.15)}}
+    #restructuring .flow-step.active .icon {animation:softPulse 2s ease-in-out infinite;}
+  </style>
+</head>
+<body>
+  <div class="orbs" aria-hidden="true">
+    <div class="orb a"></div>
+    <div class="orb b"></div>
+    <div class="orb c"></div>
+
+  </div>
+
+  <header>
+    <div class="container">
+      <nav>
+        <div class="brand">
+          <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 4v24M8 16h10a6 6 0 0 1 0 12H8M8 4h10a6 6 0 0 1 0 12H8"/>
+          </svg>
+          <span>Branori</span>
+        </div>
+        <div class="nav">
+          <a href="#services">Services</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <div class="chip">AI‑Powered · Distressed M&amp;A for PE</div>
+          <h1>We turn <span class="grad">distressed equity</span> into value.</h1>
+          <p class="sub">AI‑powered advisory for distressed buy‑outs and carve‑outs across Europe, Asia and the USA. We advise PE investors on sourcing, diligence, deal design and restructuring execution. Target size: €20–200m revenue.</p>
+          <div class="actions">
+            <a class="btn" href="#services">Explore services</a>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="window" id="contactCard">
+            <div class="window-inner" style="min-height:auto">
+              <div class="win-top">
+                <div>Start a confidential conversation</div>
+              </div>
+
+              <form id="pc-form" novalidate style="margin-top:14px">
+                <!-- Step 1 -->
+                <div class="pc-step pc-step-1" aria-live="polite">
+                  <div class="pc-field">
+                    <label for="pc-name">Name</label>
+                    <input id="pc-name" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+                  </div>
+                  <div class="pc-field">
+                    <label for="pc-email">Email</label>
+                    <input id="pc-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+                  </div>
+
+                  <button class="btn" id="pc-continue" type="button" style="width:100%;justify-content:center">
+                    Continue
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                  </button>
+
+                  <p class="pc-hint">We work with private equity investors on distressed & carve-outs.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="pc-step pc-step-2" hidden aria-live="polite">
+                  <div class="pc-field">
+                    <label for="pc-phone">Phone</label>
+                    <input id="pc-phone" name="phone" type="tel" autocomplete="tel" placeholder="+357 97 475707" />
+                  </div>
+
+                  <button class="btn" id="pc-submit" type="button" style="width:100%;justify-content:center">Send details</button>
+
+                  <p class="pc-hint">We'll call you back within hours.</p>
+                </div>
+
+                <!-- Success -->
+                <div class="pc-step pc-step-done" hidden aria-live="polite">
+                  <div class="pc-success">
+                    <div style="width:20px;height:20px;border-radius:50%;background:rgba(177,200,255,.3);border:1px solid rgba(177,200,255,.6)"></div>
+                    <div>Thanks — we'll call you shortly.</div>
+                  </div>
+                </div>
+
+                <!-- honeypot (basic spam deterrent) -->
+                <input type="text" name="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="container">
+        <h2 class="title reveal">Services for Distressed Investors</h2>
+        <p class="subt reveal">Purpose‑built for negative purchase price and loss‑making assets.</p>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true">
+              <!-- target search -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 7v8M7 11h8"/>
+              </svg>
+            </div>
+            <h3 style="margin:0 0 6px">AI Deal Sourcing</h3>
+            <p style="margin:0;color:var(--muted)">Pattern‑matching for distress signals, automated target scoring, pipeline heatmaps.</p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true">
+              <!-- diligence doc -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16l6-3 6 3V4a2 2 0 0 0-2-2z"/>
+              </svg>
+            </div>
+            <h3 style="margin:0 0 6px">Due Diligence</h3>
+            <p style="margin:0;color:var(--muted)">Red‑flag and focused diligence for loss‑makers; operations, contracts, cash, labor.</p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true">
+              <!-- structure -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/>
+              </svg>
+            </div>
+            <h3 style="margin:0 0 6px">M&A & Deal Structuring</h3>
+            <p style="margin:0;color:var(--muted)">Design for negative purchase price, ring‑fencing risk, carve‑out perimeter, TSA.</p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true">
+              <!-- wrench/gear -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3l3 3M2 22l6-2 9-9-3-3-9 9-2 6z"/><circle cx="17.5" cy="6.5" r="2.5"/>
+              </svg>
+            </div>
+            <h3 style="margin:0 0 6px">Turnaround Planning</h3>
+            <p style="margin:0;color:var(--muted)">Cash control (13‑week), cost‑out, footprint/FTE, supplier resets — executed fast.</p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true">
+              <!-- merge -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 7v10M16 7v10M8 7a4 4 0 0 0 4 4h0a4 4 0 0 0 4-4"/>
+              </svg>
+            </div>
+            <h3 style="margin:0 0 6px">Post‑Merger Integration</h3>
+            <p style="margin:0;color:var(--muted)">100‑day plan, leadership cadence, cash KPIs, TSA exit with minimal disruption.</p>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon" aria-hidden="true">
+              <!-- compass -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M16 8l-4 8-4-4 8-4z"/>
+              </svg>
+            </div>
+            <h3 style="margin:0 0 6px">Corporate Development</h3>
+            <p style="margin:0;color:var(--muted)">Long‑term value path: portfolio strategy, bolt‑ons, pricing, exit readiness.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESTRUCTURING ANIMATION SECTION (Glassmorphism) -->
+    <section id="restructuring">
+      <div class="container">
+        <h2 class="title reveal">Restructuring Journey</h2>
+        <p class="subt reveal">From distress to stability in five key steps.</p>
+        <div class="flow reveal">
+          <div class="flow-line"></div>
+          <div class="flow-step active">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div class="label">Deal Sourcing</div>
+          </div>
+          <div class="flow-step">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </div>
+            <div class="label">Deal Structuring</div>
+          </div>
+          <div class="flow-step">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16l6-3 6 3V4a2 2 0 0 0-2-2z"/></svg>
+            </div>
+            <div class="label">SPA Creation</div>
+          </div>
+          <div class="flow-step">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M5 8l7-7 7 7"/></svg>
+            </div>
+            <div class="label">Cash Burn Stop</div>
+          </div>
+          <div class="flow-step">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 20 20 10"/></svg>
+            </div>
+            <div class="label">EAT Stabilized</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /RESTRUCTURING ANIMATION SECTION -->
+
+    <!-- MOMENTUM (Distressed proposition) -->
+    <section id="momentum">
+      <div class="container">
+        <div class="momentum reveal">
+          <div class="blob b1" aria-hidden="true"></div>
+          <div class="blob b2" aria-hidden="true"></div>
+
+          <div class="mom-grid">
+            <div>
+              <h3 class="title" style="margin-bottom:8px">Momentum</h3>
+              <p class="subt">We turn distressed equity into value.</p>
+              <div style="margin-top:12px">
+                <span class="pillx">Distressed buy‑outs</span>
+                <span class="pillx">Carve‑outs</span>
+                <span class="pillx">Negative purchase price</span>
+                <span class="pillx">Rapid cash control</span>
+                <span class="pillx">Restructured company</span>
+              </div>
+              <div class="callout" style="margin-top:16px">
+                <strong>Positioning:</strong> We advise investors. We are not a fund. We deliver the plan and lead execution so that the asset emerges stabilized, focused and investable.
+              </div>
+            </div>
+            <div>
+              <div style="position:relative;width:100%;aspect-ratio:1;max-width:300px;margin:0 auto;border-radius:26px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;overflow:hidden;backdrop-filter:blur(16px)">
+                <canvas id="orbitCanvas" style="width:100%;height:100%;display:block"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- GLOBAL REACH - Limassol Hub -->
+    <section id="global">
+      <div class="container">
+        <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center">
+          <!-- Globe -->
+          <div style="position:relative;aspect-ratio:1/1;width:min(500px,90vw);margin-inline:auto;filter:drop-shadow(0 20px 30px rgba(0,0,0,.4))">
+            <svg style="width:100%;height:100%;overflow:visible" viewBox="0 0 500 500" aria-label="Global Network">
+              <defs>
+                <radialGradient id="globeGlow" cx="50%" cy="50%" r="60%">
+                  <stop offset="0%" stop-color="#b1c8ff" stop-opacity="0.4"/>
+                  <stop offset="60%" stop-color="#cabad" stop-opacity="0.15"/>
+                  <stop offset="100%" stop-color="#111827" stop-opacity="0"/>
+                </radialGradient>
+                <filter id="globeSoft" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="1.5"/>
+                </filter>
+              </defs>
+
+              <!-- halo subtle -->
+              <circle cx="250" cy="250" r="135" fill="url(#globeGlow)" filter="url(#globeSoft)"/>
+
+              <!-- rotating grid - subtle -->
+              <g style="animation:spin 25s linear infinite;transform-origin:250px 250px">
+                <!-- longitudes -->
+                <circle cx="250" cy="250" r="125" fill="none" stroke="rgba(177,200,255,.08)" stroke-width="0.8"/>
+                <circle cx="250" cy="250" r="100" fill="none" stroke="rgba(177,200,255,.06)" stroke-width="0.8"/>
+                <circle cx="250" cy="250" r="75" fill="none" stroke="rgba(177,200,255,.06)" stroke-width="0.8"/>
+                
+                <!-- latitudes -->
+                <g style="animation:spin 35s linear infinite reverse;transform-origin:250px 250px">
+                  <ellipse cx="250" cy="250" rx="125" ry="125" fill="none" stroke="rgba(177,200,255,.05)" stroke-width="0.8"/>
+                  <ellipse cx="250" cy="250" rx="125" ry="60" fill="none" stroke="rgba(177,200,255,.06)" stroke-width="0.8"/>
+                  <ellipse cx="250" cy="250" rx="60" ry="125" fill="none" stroke="rgba(177,200,255,.06)" stroke-width="0.8"/>
+                </g>
+              </g>
+
+              <!-- Limassol marker -->
+              <g>
+                <circle cx="296" cy="246" r="4" fill="rgba(177,200,255,.9)"/>
+                <circle cx="296" cy="246" r="9" fill="none" stroke="rgba(177,200,255,.5)" stroke-opacity="0.8">
+                  <animate attributeName="r" values="9;16;9" dur="2.4s" repeatCount="indefinite"/>
+                  <animate attributeName="stroke-opacity" values="0.8;0.2;0.8" dur="2.4s" repeatCount="indefinite"/>
+                </circle>
+                <text x="306" y="242" style="font:500 11px Inter,system-ui,Arial;fill:rgba(177,200,255,.9)">Limassol</text>
+              </g>
+
+              <!-- connector lines to regions -->
+              <g style="opacity:0.6">
+                <line x1="300" y1="246" x2="385" y2="215" style="stroke:rgba(177,200,255,.3);stroke-width:1"/>
+                <line x1="296" y1="246" x2="375" y2="270" style="stroke:rgba(177,200,255,.3);stroke-width:1"/>
+                <line x1="296" y1="246" x2="355" y2="315" style="stroke:rgba(177,200,255,.3);stroke-width:1"/>
+              </g>
+
+              <!-- Region tags -->
+              <g style="font:500 12px Inter,system-ui,Arial">
+                <g transform="translate(395,205)">
+                  <rect rx="8" ry="8" width="75" height="24" fill="rgba(255,255,255,.05)" stroke="rgba(177,200,255,.2)" stroke-width="0.8"/>
+                  <text x="8" y="16" fill="rgba(177,200,255,.8)">Europe</text>
+                </g>
+                <g transform="translate(365,260)">
+                  <rect rx="8" ry="8" width="95" height="24" fill="rgba(255,255,255,.05)" stroke="rgba(177,200,255,.2)" stroke-width="0.8"/>
+                  <text x="8" y="16" fill="rgba(177,200,255,.8)">Middle East</text>
+                </g>
+                <g transform="translate(335,315)">
+                  <rect rx="8" ry="8" width="75" height="24" fill="rgba(255,255,255,.05)" stroke="rgba(177,200,255,.2)" stroke-width="0.8"/>
+                  <text x="8" y="16" fill="rgba(177,200,255,.8)">Asia</text>
+                </g>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Content -->
+          <div class="reveal">
+            <h2 class="title" style="margin-bottom:12px">Limassol Hub</h2>
+            <p class="subt" style="margin-bottom:20px;max-width:none">Branori operates from Limassol — strategically positioned at the intersection of Europe, Middle East, and Asia. From here, we connect dealflow, talent, and markets across three time zones with rapid decision-making.</p>
+            
+            <div style="display:grid;gap:12px;margin-top:16px">
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(177,200,255,.15);padding:12px 14px;border-radius:14px;font:500 13px Inter,system-ui,Arial;color:rgba(255,255,255,.8)">
+                <span style="color:rgba(177,200,255,.9)">●</span> <strong>3-Region Coverage:</strong> Europe · Middle East · Asia
+              </div>
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(177,200,255,.15);padding:12px 14px;border-radius:14px;font:500 13px Inter,system-ui,Arial;color:rgba(255,255,255,.8)">
+                <span style="color:rgba(177,200,255,.9)">●</span> <strong>Flight Times:</strong> 1–4 hours to major hubs (ATH, IST, TLV, DXB)
+              </div>
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(177,200,255,.15);padding:12px 14px;border-radius:14px;font:500 13px Inter,system-ui,Arial;color:rgba(255,255,255,.8)">
+                <span style="color:rgba(177,200,255,.9)">●</span> <strong>Framework:</strong> EU jurisdiction, English business practice, tech talent
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style>
+        @keyframes spin{to{transform:rotate(360deg)}}
+      </style>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" style="padding:140px 0">
+      <div class="container">
+        <div class="reveal" style="max-width:700px;margin:0 auto">
+          <div style="text-align:center;margin-bottom:80px">
+            <h2 class="title" style="margin:0 0 16px">Get in touch</h2>
+            <p class="subt">Start a confidential conversation with our team.</p>
+          </div>
+          
+          <!-- Contact Form Card -->
+          <div class="window" style="border-radius:28px;padding:40px">
+            <div class="window-inner" style="min-height:auto;padding:0;border:none;background:transparent;box-shadow:none">
+              <form id="pc-form-2" novalidate>
+                <!-- Step 1 -->
+                <div class="pc-step pc-step-1" aria-live="polite">
+                  <div class="pc-field">
+                    <label for="pc-name-2">Name</label>
+                    <input id="pc-name-2" name="name" type="text" autocomplete="name" placeholder="Your name" required />
+                  </div>
+                  <div class="pc-field">
+                    <label for="pc-email-2">Email</label>
+                    <input id="pc-email-2" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+                  </div>
+
+                  <button class="btn" id="pc-continue-2" type="button" style="width:100%;justify-content:center;margin-top:20px;padding:14px 16px">
+                    Continue
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                  </button>
+
+                  <p class="pc-hint" style="margin-top:16px">We work with private equity investors on distressed & carve-outs.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="pc-step pc-step-2" hidden aria-live="polite">
+                  <div class="pc-field">
+                    <label for="pc-phone-2">Phone</label>
+                    <input id="pc-phone-2" name="phone" type="tel" autocomplete="tel" placeholder="+357 97 475707" />
+                  </div>
+
+                  <button class="btn" id="pc-submit-2" type="button" style="width:100%;justify-content:center;margin-top:20px;padding:14px 16px">Send details</button>
+
+                  <p class="pc-hint" style="margin-top:16px">We'll call you back within hours.</p>
+                </div>
+
+                <!-- Success -->
+                <div class="pc-step pc-step-done" hidden aria-live="polite">
+                  <div class="pc-success">
+                    <div style="width:20px;height:20px;border-radius:50%;background:rgba(177,200,255,.3);border:1px solid rgba(177,200,255,.6)"></div>
+                    <div>Thanks — we'll call you shortly.</div>
+                  </div>
+                </div>
+
+                <!-- honeypot -->
+                <input type="text" name="company" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0" />
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container ft">
+      <div>© <span id="year"></span> Branori International Ltd.</div>
+      <div style="display:flex;gap:18px">
+        <a href="#imprint">Imprint</a>
+        <a href="#privacy">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Reveal on scroll
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    },{threshold:.15});
+    revealEls.forEach(el=>io.observe(el));
+
+    // Simple parallax for orbs
+    window.addEventListener('mousemove', (e)=>{
+      const x = (e.clientX / window.innerWidth - .5) * 10;
+      const y = (e.clientY / window.innerHeight - .5) * 10;
+      document.querySelector('.orb.a').style.transform = `translate(${x * -1}px, ${y * -1}px)`;
+      document.querySelector('.orb.b').style.transform = `translate(${x * 1}px, ${y * 1}px)`;
+    });
+
+    // Orbit Animation (Canvas-based)
+    const orbitCanvas = document.getElementById('orbitCanvas');
+    if (orbitCanvas) {
+      const ctx = orbitCanvas.getContext('2d');
+      let animationId;
+      let rotation = 0;
+      let lastDrawTime = 0;
+
+      function drawOrbit(currentTime) {
+        const rect = orbitCanvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const size = Math.min(rect.width, rect.height);
+        
+        if (orbitCanvas.width !== size * dpr || orbitCanvas.height !== size * dpr) {
+          orbitCanvas.width = size * dpr;
+          orbitCanvas.height = size * dpr;
+          orbitCanvas.style.width = size + 'px';
+          orbitCanvas.style.height = size + 'px';
+          ctx.scale(dpr, dpr);
+        }
+        
+        const centerX = size / 2;
+        const centerY = size / 2;
+
+        // Clear
+        ctx.clearRect(0, 0, size, size);
+
+        // Draw orbit circles
+        ctx.strokeStyle = 'rgba(177,200,255,0.1)';
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, size * 0.1, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(202,189,255,0.08)';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, size * 0.16, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(255,201,163,0.05)';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, size * 0.22, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Center point
+        ctx.fillStyle = 'rgba(177,200,255,0.5)';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, size * 0.012, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Icons data
+        const iconData = [
+          {orbit: 0.1, angle: rotation * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'gear', label: '⚙'},
+          {orbit: 0.1, angle: (rotation + 120) * Math.PI / 180, color: 'rgba(202,189,255,0.9)', bgColor: 'rgba(202,189,255,0.2)', icon: 'chip', label: '◻'},
+          {orbit: 0.1, angle: (rotation + 240) * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'network', label: '◆'},
+
+          {orbit: 0.16, angle: (-rotation * 1.2) * Math.PI / 180, color: 'rgba(202,189,255,0.9)', bgColor: 'rgba(202,189,255,0.2)', icon: 'search', label: '◯'},
+          {orbit: 0.16, angle: (-rotation * 1.2 + 120) * Math.PI / 180, color: 'rgba(255,201,163,0.9)', bgColor: 'rgba(255,201,163,0.2)', icon: 'chart', label: '∧'},
+          {orbit: 0.16, angle: (-rotation * 1.2 + 240) * Math.PI / 180, color: 'rgba(126,240,181,0.9)', bgColor: 'rgba(126,240,181,0.2)', icon: 'check', label: '✓'},
+
+          {orbit: 0.22, angle: (rotation * 0.8) * Math.PI / 180, color: 'rgba(255,201,163,0.9)', bgColor: 'rgba(255,201,163,0.2)', icon: 'speed', label: '→'},
+          {orbit: 0.22, angle: (rotation * 0.8 + 120) * Math.PI / 180, color: 'rgba(126,240,181,0.9)', bgColor: 'rgba(126,240,181,0.2)', icon: 'dollar', label: '$'},
+          {orbit: 0.22, angle: (rotation * 0.8 + 240) * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'focus', label: '●'},
+        ];
+
+        iconData.forEach(item => {
+          const x = centerX + Math.cos(item.angle) * size * item.orbit;
+          const y = centerY + Math.sin(item.angle) * size * item.orbit;
+          const iconSize = size * 0.018;
+
+          // Background glow
+          ctx.fillStyle = item.bgColor;
+          ctx.beginPath();
+          ctx.arc(x, y, iconSize * 2, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Icon circle bg
+          ctx.fillStyle = item.bgColor;
+          ctx.beginPath();
+          ctx.arc(x, y, iconSize * 1.2, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Icon border
+          ctx.strokeStyle = item.color;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(x, y, iconSize * 1.2, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Icon symbol
+          ctx.fillStyle = item.color;
+          ctx.font = `bold ${iconSize * 1.5}px Arial, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(item.label, x, y);
+        });
+
+        // Faster rotation - 0.8 degrees per frame
+        rotation += 0.8;
+        animationId = requestAnimationFrame(drawOrbit);
+      }
+
+      drawOrbit();
+
+      // Responsive resize
+      window.addEventListener('resize', () => {
+        drawOrbit();
+      });
+    }
+    const globeMap = document.getElementById('globeMap');
+    if (globeMap) {
+      // Geographische Koordinaten (normalized to 0-1000, 0-600)
+      const cities = [
+        // Europe
+        {name: 'London', x: 520, y: 200, region: 'eu', label: 'LONDON'},
+        {name: 'Frankfurt', x: 570, y: 210, region: 'eu', label: 'FRANKFURT'},
+        {name: 'Zurich', x: 560, y: 240, region: 'eu', label: 'ZURICH'},
+        // HQ
+        {name: 'Limassol', x: 610, y: 280, region: 'hq', label: 'LIMASSOL HQ', size: 6},
+        // Asia
+        {name: 'Singapore', x: 750, y: 380, region: 'asia', label: 'SINGAPORE'},
+        {name: 'Tokyo', x: 830, y: 220, region: 'asia', label: 'TOKYO'},
+        {name: 'Hong Kong', x: 800, y: 300, region: 'asia', label: 'HONG KONG'},
+        // USA
+        {name: 'New York', x: 250, y: 220, region: 'na', label: 'NEW YORK'},
+        {name: 'Los Angeles', x: 100, y: 260, region: 'na', label: 'LOS ANGELES'},
+        {name: 'Toronto', x: 270, y: 180, region: 'na', label: 'TORONTO'}
+      ];
+
+      const regionColors = {
+        eu: 'rgba(177,200,255,0.8)',
+        hq: 'rgba(177,200,255,1)',
+        asia: 'rgba(202,189,255,0.8)',
+        na: 'rgba(255,201,163,0.8)'
+      };
+
+      const regionBg = {
+        eu: 'rgba(177,200,255,0.1)',
+        hq: 'rgba(177,200,255,0.2)',
+        asia: 'rgba(202,189,255,0.1)',
+        na: 'rgba(255,201,163,0.1)'
+      };
+
+      globeMap.setAttribute('viewBox', '0 0 1000 600');
+      globeMap.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+
+      let svgContent = `
+        <defs>
+          <style>
+            @keyframes pulse-city { 0%, 100% { r: 5; opacity: 0.8; } 50% { r: 8; opacity: 0.4; } }
+            @keyframes pulse-hq { 0%, 100% { r: 6.5; opacity: 1; } 50% { r: 10; opacity: 0.5; } }
+            .city-pulse { animation: pulse-city 2.5s ease-in-out infinite; }
+            .hq-pulse { animation: pulse-hq 3s ease-in-out infinite; }
+            .city-label { font-size: 10px; font-weight: 600; fill: rgba(255,255,255,0.7); text-anchor: middle; }
+            .region-label { font-size: 48px; font-weight: 700; fill: rgba(177,200,255,0.18); pointer-events: none; }
+          </style>
+        </defs>
+        
+        <!-- Background labels -->
+        <text x="100" y="150" class="region-label" style="font-size:42px;fill:rgba(255,201,163,0.2)">AMERICAS</text>
+        <text x="560" y="150" class="region-label" style="font-size:42px">EUROPE</text>
+        <text x="820" y="480" class="region-label" style="font-size:42px">ASIA</text>
+      `;
+
+      // Draw connections from HQ to all cities
+      const hq = cities.find(c => c.region === 'hq');
+      cities.forEach(city => {
+        if (city.region !== 'hq') {
+          svgContent += `<line x1="${hq.x}" y1="${hq.y}" x2="${city.x}" y2="${city.y}" stroke="rgba(177,200,255,0.15)" stroke-width="1" opacity="0.5"/>`;
+        }
+      });
+
+      // Draw connections between regional hubs
+      svgContent += `
+        <line x1="520" y1="200" x2="250" y2="220" stroke="rgba(255,201,163,0.15)" stroke-width="0.8"/>
+        <line x1="750" y1="380" x2="830" y2="220" stroke="rgba(202,189,255,0.15)" stroke-width="0.8"/>
+        <line x1="100" y1="260" x2="520" y2="200" stroke="rgba(255,201,163,0.15)" stroke-width="0.8"/>
+      `;
+
+      // Draw cities
+      cities.forEach(city => {
+        const size = city.size || 5;
+        const isPulse = city.region === 'hq' ? 'hq-pulse' : 'city-pulse';
+        const color = regionColors[city.region];
+        const bgColor = regionBg[city.region];
+
+        // Background glow
+        svgContent += `<circle cx="${city.x}" cy="${city.y}" r="${size + 4}" fill="${bgColor}" opacity="0.6"/>`;
+        
+        // Pulsing circle
+        svgContent += `<circle cx="${city.x}" cy="${city.y}" r="${size}" fill="${color}" class="${isPulse}"/>`;
+        
+        // City point
+        svgContent += `<circle cx="${city.x}" cy="${city.y}" r="2.5" fill="rgba(255,255,255,0.9)"/>`;
+        
+        // Label
+        if (city.region === 'hq') {
+          svgContent += `<text x="${city.x}" y="${city.y + 35}" class="city-label" fill="rgba(177,200,255,0.9)" font-weight="700">${city.label}</text>`;
+        } else {
+          svgContent += `<text x="${city.x}" y="${city.y + 25}" class="city-label">${city.label}</text>`;
+        }
+      });
+
+      globeMap.innerHTML = svgContent;
+    }
+  </script>
+
+  <!-- Progressive Contact Form Script -->
+  <script>
+    // Restructuring Flow Animation
+    (function(){
+      const steps = document.querySelectorAll('#restructuring .flow-step');
+      let idx = 0;
+      function activateNext(){
+        steps.forEach(s=>s.classList.remove('active'));
+        steps[idx].classList.add('active');
+        idx = (idx+1)%steps.length;
+      }
+      activateNext();
+      setInterval(activateNext, 3000);
+    })();
+
+    // Contact Form 1 (Hero)
+    (function(){
+      const form = document.getElementById('pc-form');
+      if (!form) return;
+      
+      const s1 = form.querySelector('.pc-step-1');
+      const s2 = form.querySelector('.pc-step-2');
+      const done = form.querySelector('.pc-step-done');
+      const btnNext = document.getElementById('pc-continue');
+      const btnSubmit = document.getElementById('pc-submit');
+      const nameEl = document.getElementById('pc-name');
+      const emailEl = document.getElementById('pc-email');
+
+      function show(el){ [s1,s2,done].forEach(x=>{ if(!x) return; x.hidden = (x!==el); });
+                         requestAnimationFrame(()=> el.classList.add('pc-show')); }
+      show(s1);
+
+      function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+      btnNext.addEventListener('click', ()=>{
+        const name = nameEl.value.trim();
+        const email = emailEl.value.trim();
+        let ok = true;
+        if(!name){ ok = false; nameEl.focus(); }
+        else if(!validEmail(email)){ ok = false; emailEl.focus(); }
+        if(!ok){
+          [nameEl,emailEl].forEach(i=>{ if(!i.checkValidity && !i.value) return; i.style.borderColor = 'rgba(255,152,162,.6)'; });
+          return;
+        }
+        [nameEl,emailEl].forEach(i=> i.style.borderColor='var(--border)');
+        show(s2);
+      });
+
+      btnSubmit.addEventListener('click', ()=>{ show(done); });
+    })();
+
+    // Contact Form 2 (Bottom)
+    (function(){
+      const form = document.getElementById('pc-form-2');
+      if (!form) return;
+      
+      const s1 = form.querySelector('.pc-step-1');
+      const s2 = form.querySelector('.pc-step-2');
+      const done = form.querySelector('.pc-step-done');
+      const btnNext = document.getElementById('pc-continue-2');
+      const btnSubmit = document.getElementById('pc-submit-2');
+      const nameEl = document.getElementById('pc-name-2');
+      const emailEl = document.getElementById('pc-email-2');
+
+      function show(el){ [s1,s2,done].forEach(x=>{ if(!x) return; x.hidden = (x!==el); });
+                         requestAnimationFrame(()=> el.classList.add('pc-show')); }
+      show(s1);
+
+      function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+      btnNext.addEventListener('click', ()=>{
+        const name = nameEl.value.trim();
+        const email = emailEl.value.trim();
+        let ok = true;
+        if(!name){ ok = false; nameEl.focus(); }
+        else if(!validEmail(email)){ ok = false; emailEl.focus(); }
+        if(!ok){
+          [nameEl,emailEl].forEach(i=>{ if(!i.checkValidity && !i.value) return; i.style.borderColor = 'rgba(255,152,162,.6)'; });
+          return;
+        }
+        [nameEl,emailEl].forEach(i=> i.style.borderColor='var(--border)');
+        show(s2);
+      });
+
+      btnSubmit.addEventListener('click', ()=>{ show(done); });
+    })();
+  </script>
