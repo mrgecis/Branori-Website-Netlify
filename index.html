@@ -97,6 +97,7 @@
       .nav.active{display:flex}
       .nav a{margin-left:0;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:15px}
       .nav a:hover{color:#fff}
+      .actions .btn:first-child { display: none; }
     }
     .call-top{margin-left:16px; padding:10px 14px; border-radius:14px; text-decoration:none; color:#fff;
       border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.1)}
@@ -106,7 +107,7 @@
     .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center}
     @media (max-width: 950px){ .hero-grid{grid-template-columns:1fr} }
     .chip{display:inline-flex;align-items:center;gap:8px;color:rgba(255,255,255,.8);font-size:12px;border-radius:999px;padding:8px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
-    h1{font-size:46px; line-height:1.08; margin:12px 0 8px}
+    h1{font-size:46px; line-height:1.08; margin:12px 0 8px; word-spacing: 9999px}
     .grad{background:linear-gradient(90deg, var(--brand1), var(--brand2), var(--brand3)); -webkit-background-clip:text; background-clip:text; color:transparent}
     .sub{color:var(--muted); max-width:720px}
     .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
@@ -149,6 +150,17 @@
       }
       .spark, .marquee { animation: none !important; }
       .orb { opacity: 0.3; }
+    }
+    /* Performance: Will-change hints, lazy loading support */
+    .orb{will-change:transform}
+    canvas{image-rendering:crisp-edges}
+    svg{contain:style layout paint}
+    img{loading:lazy}
+    @media (prefers-reduced-motion: no-preference) {
+      @media (max-width: 640px) {
+        .b1, .b2 { animation: none; }
+        .spark, .marquee { animation-duration: 4s; }
+      }
     }
     /* Sections */
     section{padding:70px 0}
@@ -248,6 +260,7 @@
     /* Mobile fix for scrolling issue */
     @media (max-width: 640px) {
       .window-inner { min-height: auto !important; }
+      .hero { padding: 80px 0 30px; }
     }
     /* Restructuring Flow Animation */
     #restructuring {padding:100px 0; position:relative;}
@@ -395,7 +408,7 @@
         <div class="reveal">
           <div class="chip">AI‑Powered · Distressed M&amp;A for PE</div>
           <h1>We turn <span class="grad">distressed equity</span> into value.</h1>
-          <p class="sub">AI‑powered advisory for distressed buy‑outs and carve‑outs across Europe, Asia and the USA. We advise PE investors on sourcing, diligence, deal design and restructuring execution. Target size: €20–200m revenue.</p>
+          <p class="sub">AI‑powered advisory for distressed buy‑outs and carve‑outs across Middle East, Europe, Asia and America. We advise PE investors on Deal Sourcing, Due Diligence, Transaction Structuring and Operational Restructuring and Post-merger Integration.</p>
           <div class="actions">
             <a class="btn" href="#services">Explore services</a>
           </div>
@@ -834,12 +847,23 @@
     // Orbit Animation (Canvas-based)
     const orbitCanvas = document.getElementById('orbitCanvas');
     if (orbitCanvas) {
-      const ctx = orbitCanvas.getContext('2d');
+      const ctx = orbitCanvas.getContext('2d', { alpha: true });
       let animationId;
       let rotation = 0;
       let lastDrawTime = 0;
 
       function drawOrbit(currentTime) {
+        // Performance optimization: throttle on mobile
+        const isMobile = window.innerWidth <= 640;
+        const targetFps = isMobile ? 30 : 60;
+        const frameDelta = 1000 / targetFps;
+        
+        if (currentTime && lastDrawTime && (currentTime - lastDrawTime) < frameDelta) {
+          animationId = requestAnimationFrame(drawOrbit);
+          return;
+        }
+        lastDrawTime = currentTime;
+        
         const rect = orbitCanvas.getBoundingClientRect();
         const dpr = window.devicePixelRatio || 1;
         const size = Math.min(rect.width, rect.height);
