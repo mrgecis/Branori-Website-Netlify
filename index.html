@@ -70,10 +70,6 @@
     }
     /* Background orbs (parallax) */
     .orbs{position:fixed; inset:0; pointer-events:none; z-index:-1; overflow:hidden}
-    header, nav, main {
-      position: relative;
-      z-index: 1;
-    }
     .orb{position:absolute; border-radius:999px; filter:blur(70px); opacity:.45; mix-blend:screen; transform:translateZ(0)}
     .orb.a{width:560px;height:560px;left:-140px;top:-160px;background:radial-gradient(60% 60% at 50% 50%, var(--brand1), rgba(177,200,255,0));}
     .orb.b{width:620px;height:620px;right:-180px;bottom:-120px;background:radial-gradient(60% 60% at 50% 50%, #ff8db3, rgba(255,141,179,0));}
@@ -83,8 +79,6 @@
       background:linear-gradient(to bottom, rgba(7,11,17,.75), rgba(7,11,17,.35)); border-bottom:1px solid rgba(255,255,255,.06)}
     .container{max-width:1200px;margin:0 auto;padding:0 20px}
     nav{height:68px; display:flex; align-items:center; justify-content:space-between}
-    /* Main content above orbs */
-    main { position: relative; z-index: 1; }
     .brand{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.4px}
     .badge{width:38px;height:38px;border-radius:14px;background:rgba(255,255,255,.08);
       border:1px solid var(--border); display:grid;place-items:center; box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
@@ -268,12 +262,6 @@
     /* Step transitions (fade/slide) */
     #contactCard .pc-step{opacity:0; transform:translateY(6px); transition:opacity .28s ease, transform .28s ease}
     #contactCard .pc-step.pc-show{opacity:1; transform:translateY(0)}
-    /* Force visibility for all main content elements */
-    main, header, nav, section, .container, .reveal, .window, .window-inner, .hero, .hero-grid, .actions, .btn, .card, .momentum, .work-card, .contact, footer {
-      display: initial !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-    }
     /* Mobile fix for scrolling issue */
     @media (max-width: 640px) {
       .window-inner { min-height: auto !important; }
