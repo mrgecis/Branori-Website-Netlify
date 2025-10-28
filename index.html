@@ -90,8 +90,7 @@
     .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px, -7px)}
     @media (max-width: 768px){
       .hamburger{display:flex}
-      .nav{position:fixed;top:68px;left:0;right:0;background:linear-gradient(to bottom, rgba(7,11,17,.95), rgba(7,11,17,.85));backdrop-filter:blur(12px);flex-direction:column;gap:0;margin:0;padding:20px;display:flex;z-index:99;max-height:calc(100vh - 68px);overflow-y:auto;border-bottom:1px solid rgba(255,255,255,.06);opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .3s cubic-bezier(.4, .0, .2, 1), transform .3s cubic-bezier(.4, .0, .2, 1), visibility .3s cubic-bezier(.4, .0, .2, 1)}
-      .nav.active{opacity:1;visibility:visible;transform:translateY(0)}
+      .nav{position:fixed;top:68px;left:0;right:0;background:linear-gradient(to bottom, rgba(7,11,17,.95), rgba(7,11,17,.85));backdrop-filter:blur(12px);flex-direction:column;gap:0;margin:0;padding:20px;display:none;z-index:99;max-height:calc(100vh - 68px);overflow-y:auto;border-bottom:1px solid rgba(255,255,255,.06)}
       .nav a{display:block;margin-left:0;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:15px}
       .nav a:hover{color:#fff}
     }
@@ -620,25 +619,25 @@
           </div>
           <div class="flow-step">
             <div class="icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
             </div>
             <div class="label">Deal Structuring</div>
           </div>
           <div class="flow-step">
             <div class="icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="transform:translateX(0)"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
             </div>
             <div class="label">SPA Creation</div>
           </div>
           <div class="flow-step">
             <div class="icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M5 8l7-7 7 7"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             </div>
             <div class="label">Cash Burn Stop</div>
           </div>
           <div class="flow-step">
             <div class="icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 20 20 10"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <div class="label">EAT Stabilized</div>
           </div>
@@ -665,7 +664,7 @@
                 <span class="pillx">Rapid cash control</span>
                 <span class="pillx">Restructured company</span>
               </div>
-              <div class="callout" style="margin-top:16px">
+              <div style="margin-top:16px">
                 <strong>Positioning:</strong> We advise investors. We are not a fund. We deliver the plan and lead execution so that the asset emerges stabilized, focused and investable.
               </div>
             </div>
@@ -849,6 +848,9 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Scroll to top on page load
+      window.scrollTo(0, 0);
+      
       // Year
       const yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -858,17 +860,32 @@
       const mobileNav = document.getElementById('mobileNav');
       
       if (hamburgerBtn && mobileNav) {
-        hamburgerBtn.addEventListener('click', () => {
-          hamburgerBtn.classList.toggle('active');
-          mobileNav.classList.toggle('active');
+        hamburgerBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = mobileNav.style.display === 'flex';
+          if (isOpen) {
+            mobileNav.style.display = 'none';
+            hamburgerBtn.classList.remove('active');
+          } else {
+            mobileNav.style.display = 'flex';
+            hamburgerBtn.classList.add('active');
+          }
         });
         
         // Close menu when link is clicked
         mobileNav.querySelectorAll('a').forEach(link => {
           link.addEventListener('click', () => {
+            mobileNav.style.display = 'none';
             hamburgerBtn.classList.remove('active');
-            mobileNav.classList.remove('active');
           });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!hamburgerBtn.contains(e.target) && !mobileNav.contains(e.target)) {
+            mobileNav.style.display = 'none';
+            hamburgerBtn.classList.remove('active');
+          }
         });
       }
 
