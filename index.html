@@ -90,7 +90,8 @@
     .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px, -7px)}
     @media (max-width: 768px){
       .hamburger{display:flex}
-      .nav{position:fixed;top:68px;left:0;right:0;background:linear-gradient(to bottom, rgba(7,11,17,.95), rgba(7,11,17,.85));backdrop-filter:blur(12px);flex-direction:column;gap:0;margin:0;padding:20px;display:none;z-index:99;max-height:calc(100vh - 68px);overflow-y:auto;border-bottom:1px solid rgba(255,255,255,.06)}
+      .nav{position:fixed;top:68px;left:0;right:0;background:linear-gradient(to bottom, rgba(7,11,17,.95), rgba(7,11,17,.85));backdrop-filter:blur(12px);flex-direction:column;gap:0;margin:0;padding:20px;display:flex;z-index:99;max-height:calc(100vh - 68px);overflow-y:auto;border-bottom:1px solid rgba(255,255,255,.06);pointer-events:none;opacity:0}
+      .nav[style*="display: none"]{display:none}
       .nav a{display:block;margin-left:0;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:15px}
       .nav a:hover{color:#fff}
     }
@@ -531,7 +532,7 @@
     <!-- SERVICES -->
     <section id="services">
       <div class="container">
-        <h2 class="title reveal">DEPLOYED_LIVE_NOW</h2>
+        <h2 class="title reveal">Services for Distressed Investors</h2>
         <p class="subt reveal">Purpose‑built for negative purchase price and loss‑making assets.</p>
 
         <div class="cards">
@@ -860,31 +861,41 @@
       const mobileNav = document.getElementById('mobileNav');
       
       if (hamburgerBtn && mobileNav) {
+        function closeMenu() {
+          mobileNav.style.display = 'none';
+          mobileNav.style.opacity = '0';
+          mobileNav.style.pointerEvents = 'none';
+          hamburgerBtn.classList.remove('active');
+        }
+        
+        function openMenu() {
+          mobileNav.style.display = 'flex';
+          mobileNav.style.opacity = '1';
+          mobileNav.style.pointerEvents = 'auto';
+          hamburgerBtn.classList.add('active');
+        }
+        
         hamburgerBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const isOpen = mobileNav.style.display === 'flex';
-          if (isOpen) {
-            mobileNav.style.display = 'none';
-            hamburgerBtn.classList.remove('active');
+          e.preventDefault();
+          if (mobileNav.style.display === 'flex') {
+            closeMenu();
           } else {
-            mobileNav.style.display = 'flex';
-            hamburgerBtn.classList.add('active');
+            openMenu();
           }
         });
         
         // Close menu when link is clicked
         mobileNav.querySelectorAll('a').forEach(link => {
           link.addEventListener('click', () => {
-            mobileNav.style.display = 'none';
-            hamburgerBtn.classList.remove('active');
+            closeMenu();
           });
         });
         
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
           if (!hamburgerBtn.contains(e.target) && !mobileNav.contains(e.target)) {
-            mobileNav.style.display = 'none';
-            hamburgerBtn.classList.remove('active');
+            closeMenu();
           }
         });
       }
