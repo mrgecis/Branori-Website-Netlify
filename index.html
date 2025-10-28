@@ -268,6 +268,12 @@
     /* Step transitions (fade/slide) */
     #contactCard .pc-step{opacity:0; transform:translateY(6px); transition:opacity .28s ease, transform .28s ease}
     #contactCard .pc-step.pc-show{opacity:1; transform:translateY(0)}
+    /* Force visibility for all main content elements */
+    main, header, nav, section, .container, .reveal, .window, .window-inner, .hero, .hero-grid, .actions, .btn, .card, .momentum, .work-card, .contact, footer {
+      display: initial !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
     /* Mobile fix for scrolling issue */
     @media (max-width: 640px) {
       .window-inner { min-height: auto !important; }
