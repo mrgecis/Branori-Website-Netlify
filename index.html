@@ -532,7 +532,7 @@
     <!-- SERVICES -->
     <section id="services">
       <div class="container">
-        <h2 class="title reveal">Services for Distressed Investors</h2>
+        <h2 class="title reveal">Test1</h2>
         <p class="subt reveal">Purpose‑built for negative purchase price and loss‑making assets.</p>
 
         <div class="cards">
@@ -848,253 +848,256 @@
   </footer>
 
   <script>
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
+    document.addEventListener('DOMContentLoaded', function() {
+      // Year
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-    // Hamburger Menu Toggle
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
-    const mobileNav = document.getElementById('mobileNav');
-    
-    if (hamburgerBtn && mobileNav) {
-      hamburgerBtn.addEventListener('click', () => {
-        hamburgerBtn.classList.toggle('active');
-        mobileNav.classList.toggle('active');
-      });
+      // Hamburger Menu Toggle
+      const hamburgerBtn = document.getElementById('hamburgerBtn');
+      const mobileNav = document.getElementById('mobileNav');
       
-      // Close menu when link is clicked
-      mobileNav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          hamburgerBtn.classList.remove('active');
-          mobileNav.classList.remove('active');
+      if (hamburgerBtn && mobileNav) {
+        hamburgerBtn.addEventListener('click', () => {
+          hamburgerBtn.classList.toggle('active');
+          mobileNav.classList.toggle('active');
         });
-      });
-    }
-
-    // Reveal on scroll
-    const revealEls = document.querySelectorAll('.reveal');
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
-      });
-    },{threshold:.15});
-    revealEls.forEach(el=>io.observe(el));
-
-    // Simple parallax for orbs
-    window.addEventListener('mousemove', (e)=>{
-      const x = (e.clientX / window.innerWidth - .5) * 10;
-      const y = (e.clientY / window.innerHeight - .5) * 10;
-      document.querySelector('.orb.a').style.transform = `translate(${x * -1}px, ${y * -1}px)`;
-      document.querySelector('.orb.b').style.transform = `translate(${x * 1}px, ${y * 1}px)`;
-    });
-
-    // Orbit Animation (Canvas-based)
-    const orbitCanvas = document.getElementById('orbitCanvas');
-    if (orbitCanvas) {
-      const ctx = orbitCanvas.getContext('2d');
-      let animationId;
-      let rotation = 0;
-      let lastDrawTime = 0;
-
-      function drawOrbit(currentTime) {
-        const rect = orbitCanvas.getBoundingClientRect();
-        const dpr = window.devicePixelRatio || 1;
-        const size = Math.min(rect.width, rect.height);
         
-        if (orbitCanvas.width !== size * dpr || orbitCanvas.height !== size * dpr) {
-          orbitCanvas.width = size * dpr;
-          orbitCanvas.height = size * dpr;
-          orbitCanvas.style.width = size + 'px';
-          orbitCanvas.style.height = size + 'px';
-          ctx.scale(dpr, dpr);
-        }
-        
-        const centerX = size / 2;
-        const centerY = size / 2;
-
-        // Clear
-        ctx.clearRect(0, 0, size, size);
-
-        // Draw orbit circles
-        ctx.strokeStyle = 'rgba(177,200,255,0.1)';
-        ctx.lineWidth = 0.6;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, size * 0.1, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.strokeStyle = 'rgba(202,189,255,0.08)';
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, size * 0.16, 0, Math.PI * 2);
-        ctx.stroke();
-
-        ctx.strokeStyle = 'rgba(255,201,163,0.05)';
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, size * 0.22, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Center point
-        ctx.fillStyle = 'rgba(177,200,255,0.5)';
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, size * 0.012, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Icons data
-        const iconData = [
-          {orbit: 0.1, angle: rotation * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'gear', label: '⚙'},
-          {orbit: 0.1, angle: (rotation + 120) * Math.PI / 180, color: 'rgba(202,189,255,0.9)', bgColor: 'rgba(202,189,255,0.2)', icon: 'chip', label: '◻'},
-          {orbit: 0.1, angle: (rotation + 240) * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'network', label: '◆'},
-
-          {orbit: 0.16, angle: (-rotation * 1.2) * Math.PI / 180, color: 'rgba(202,189,255,0.9)', bgColor: 'rgba(202,189,255,0.2)', icon: 'search', label: '◯'},
-          {orbit: 0.16, angle: (-rotation * 1.2 + 120) * Math.PI / 180, color: 'rgba(255,201,163,0.9)', bgColor: 'rgba(255,201,163,0.2)', icon: 'chart', label: '∧'},
-          {orbit: 0.16, angle: (-rotation * 1.2 + 240) * Math.PI / 180, color: 'rgba(126,240,181,0.9)', bgColor: 'rgba(126,240,181,0.2)', icon: 'check', label: '✓'},
-
-          {orbit: 0.22, angle: (rotation * 0.8) * Math.PI / 180, color: 'rgba(255,201,163,0.9)', bgColor: 'rgba(255,201,163,0.2)', icon: 'speed', label: '→'},
-          {orbit: 0.22, angle: (rotation * 0.8 + 120) * Math.PI / 180, color: 'rgba(126,240,181,0.9)', bgColor: 'rgba(126,240,181,0.2)', icon: 'dollar', label: '$'},
-          {orbit: 0.22, angle: (rotation * 0.8 + 240) * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'focus', label: '●'},
-        ];
-
-        iconData.forEach(item => {
-          const x = centerX + Math.cos(item.angle) * size * item.orbit;
-          const y = centerY + Math.sin(item.angle) * size * item.orbit;
-          const iconSize = size * 0.018;
-
-          // Background glow
-          ctx.fillStyle = item.bgColor;
-          ctx.beginPath();
-          ctx.arc(x, y, iconSize * 2, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Icon circle bg
-          ctx.fillStyle = item.bgColor;
-          ctx.beginPath();
-          ctx.arc(x, y, iconSize * 1.2, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Icon border
-          ctx.strokeStyle = item.color;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.arc(x, y, iconSize * 1.2, 0, Math.PI * 2);
-          ctx.stroke();
-
-          // Icon symbol
-          ctx.fillStyle = item.color;
-          ctx.font = `bold ${iconSize * 1.5}px Arial, sans-serif`;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(item.label, x, y);
+        // Close menu when link is clicked
+        mobileNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            hamburgerBtn.classList.remove('active');
+            mobileNav.classList.remove('active');
+          });
         });
-
-        // Faster rotation - 0.8 degrees per frame
-        rotation += 0.8;
-        animationId = requestAnimationFrame(drawOrbit);
       }
 
-      drawOrbit();
+      // Reveal on scroll
+      const revealEls = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            e.target.classList.add('visible');
+            io.unobserve(e.target);
+          }
+        });
+      },{threshold:.15});
+      revealEls.forEach(el=>io.observe(el));
 
-      // Responsive resize
-      window.addEventListener('resize', () => {
+      // Simple parallax for orbs
+      window.addEventListener('mousemove', (e)=>{
+        const x = (e.clientX / window.innerWidth - .5) * 10;
+        const y = (e.clientY / window.innerHeight - .5) * 10;
+        document.querySelector('.orb.a').style.transform = `translate(${x * -1}px, ${y * -1}px)`;
+        document.querySelector('.orb.b').style.transform = `translate(${x * 1}px, ${y * 1}px)`;
+      });
+
+      // Orbit Animation (Canvas-based)
+      const orbitCanvas = document.getElementById('orbitCanvas');
+      if (orbitCanvas) {
+        const ctx = orbitCanvas.getContext('2d');
+        let animationId;
+        let rotation = 0;
+        let lastDrawTime = 0;
+
+        function drawOrbit(currentTime) {
+          const rect = orbitCanvas.getBoundingClientRect();
+          const dpr = window.devicePixelRatio || 1;
+          const size = Math.min(rect.width, rect.height);
+          
+          if (orbitCanvas.width !== size * dpr || orbitCanvas.height !== size * dpr) {
+            orbitCanvas.width = size * dpr;
+            orbitCanvas.height = size * dpr;
+            orbitCanvas.style.width = size + 'px';
+            orbitCanvas.style.height = size + 'px';
+            ctx.scale(dpr, dpr);
+          }
+          
+          const centerX = size / 2;
+          const centerY = size / 2;
+
+          // Clear
+          ctx.clearRect(0, 0, size, size);
+
+          // Draw orbit circles
+          ctx.strokeStyle = 'rgba(177,200,255,0.1)';
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, size * 0.1, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = 'rgba(202,189,255,0.08)';
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, size * 0.16, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.strokeStyle = 'rgba(255,201,163,0.05)';
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, size * 0.22, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Center point
+          ctx.fillStyle = 'rgba(177,200,255,0.5)';
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, size * 0.012, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Icons data
+          const iconData = [
+            {orbit: 0.1, angle: rotation * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'gear', label: '⚙'},
+            {orbit: 0.1, angle: (rotation + 120) * Math.PI / 180, color: 'rgba(202,189,255,0.9)', bgColor: 'rgba(202,189,255,0.2)', icon: 'chip', label: '◻'},
+            {orbit: 0.1, angle: (rotation + 240) * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'network', label: '◆'},
+
+            {orbit: 0.16, angle: (-rotation * 1.2) * Math.PI / 180, color: 'rgba(202,189,255,0.9)', bgColor: 'rgba(202,189,255,0.2)', icon: 'search', label: '◯'},
+            {orbit: 0.16, angle: (-rotation * 1.2 + 120) * Math.PI / 180, color: 'rgba(255,201,163,0.9)', bgColor: 'rgba(255,201,163,0.2)', icon: 'chart', label: '∧'},
+            {orbit: 0.16, angle: (-rotation * 1.2 + 240) * Math.PI / 180, color: 'rgba(126,240,181,0.9)', bgColor: 'rgba(126,240,181,0.2)', icon: 'check', label: '✓'},
+
+            {orbit: 0.22, angle: (rotation * 0.8) * Math.PI / 180, color: 'rgba(255,201,163,0.9)', bgColor: 'rgba(255,201,163,0.2)', icon: 'speed', label: '→'},
+            {orbit: 0.22, angle: (rotation * 0.8 + 120) * Math.PI / 180, color: 'rgba(126,240,181,0.9)', bgColor: 'rgba(126,240,181,0.2)', icon: 'dollar', label: '$'},
+            {orbit: 0.22, angle: (rotation * 0.8 + 240) * Math.PI / 180, color: 'rgba(177,200,255,0.9)', bgColor: 'rgba(177,200,255,0.2)', icon: 'focus', label: '●'},
+          ];
+
+          iconData.forEach(item => {
+            const x = centerX + Math.cos(item.angle) * size * item.orbit;
+            const y = centerY + Math.sin(item.angle) * size * item.orbit;
+            const iconSize = size * 0.018;
+
+            // Background glow
+            ctx.fillStyle = item.bgColor;
+            ctx.beginPath();
+            ctx.arc(x, y, iconSize * 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Icon circle bg
+            ctx.fillStyle = item.bgColor;
+            ctx.beginPath();
+            ctx.arc(x, y, iconSize * 1.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Icon border
+            ctx.strokeStyle = item.color;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(x, y, iconSize * 1.2, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Icon symbol
+            ctx.fillStyle = item.color;
+            ctx.font = `bold ${iconSize * 1.5}px Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(item.label, x, y);
+          });
+
+          // Faster rotation - 0.8 degrees per frame
+          rotation += 0.8;
+          animationId = requestAnimationFrame(drawOrbit);
+        }
+
         drawOrbit();
-      });
-    }
-    const globeMap = document.getElementById('globeMap');
-    if (globeMap) {
-      // Geographische Koordinaten (normalized to 0-1000, 0-600)
-      const cities = [
-        // Europe
-        {name: 'London', x: 520, y: 200, region: 'eu', label: 'LONDON'},
-        {name: 'Frankfurt', x: 570, y: 210, region: 'eu', label: 'FRANKFURT'},
-        {name: 'Zurich', x: 560, y: 240, region: 'eu', label: 'ZURICH'},
-        // HQ
-        {name: 'Limassol', x: 610, y: 280, region: 'hq', label: 'LIMASSOL HQ', size: 6},
-        // Asia
-        {name: 'Singapore', x: 750, y: 380, region: 'asia', label: 'SINGAPORE'},
-        {name: 'Tokyo', x: 830, y: 220, region: 'asia', label: 'TOKYO'},
-        {name: 'Hong Kong', x: 800, y: 300, region: 'asia', label: 'HONG KONG'},
-        // USA
-        {name: 'New York', x: 250, y: 220, region: 'na', label: 'NEW YORK'},
-        {name: 'Los Angeles', x: 100, y: 260, region: 'na', label: 'LOS ANGELES'},
-        {name: 'Toronto', x: 270, y: 180, region: 'na', label: 'TORONTO'}
-      ];
 
-      const regionColors = {
-        eu: 'rgba(177,200,255,0.8)',
-        hq: 'rgba(177,200,255,1)',
-        asia: 'rgba(202,189,255,0.8)',
-        na: 'rgba(255,201,163,0.8)'
-      };
+        // Responsive resize
+        window.addEventListener('resize', () => {
+          drawOrbit();
+        });
+      }
+      const globeMap = document.getElementById('globeMap');
+      if (globeMap) {
+        // Geographische Koordinaten (normalized to 0-1000, 0-600)
+        const cities = [
+          // Europe
+          {name: 'London', x: 520, y: 200, region: 'eu', label: 'LONDON'},
+          {name: 'Frankfurt', x: 570, y: 210, region: 'eu', label: 'FRANKFURT'},
+          {name: 'Zurich', x: 560, y: 240, region: 'eu', label: 'ZURICH'},
+          // HQ
+          {name: 'Limassol', x: 610, y: 280, region: 'hq', label: 'LIMASSOL HQ', size: 6},
+          // Asia
+          {name: 'Singapore', x: 750, y: 380, region: 'asia', label: 'SINGAPORE'},
+          {name: 'Tokyo', x: 830, y: 220, region: 'asia', label: 'TOKYO'},
+          {name: 'Hong Kong', x: 800, y: 300, region: 'asia', label: 'HONG KONG'},
+          // USA
+          {name: 'New York', x: 250, y: 220, region: 'na', label: 'NEW YORK'},
+          {name: 'Los Angeles', x: 100, y: 260, region: 'na', label: 'LOS ANGELES'},
+          {name: 'Toronto', x: 270, y: 180, region: 'na', label: 'TORONTO'}
+        ];
 
-      const regionBg = {
-        eu: 'rgba(177,200,255,0.1)',
-        hq: 'rgba(177,200,255,0.2)',
-        asia: 'rgba(202,189,255,0.1)',
-        na: 'rgba(255,201,163,0.1)'
-      };
+        const regionColors = {
+          eu: 'rgba(177,200,255,0.8)',
+          hq: 'rgba(177,200,255,1)',
+          asia: 'rgba(202,189,255,0.8)',
+          na: 'rgba(255,201,163,0.8)'
+        };
 
-      globeMap.setAttribute('viewBox', '0 0 1000 600');
-      globeMap.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        const regionBg = {
+          eu: 'rgba(177,200,255,0.1)',
+          hq: 'rgba(177,200,255,0.2)',
+          asia: 'rgba(202,189,255,0.1)',
+          na: 'rgba(255,201,163,0.1)'
+        };
 
-      let svgContent = `
-        <defs>
-          <style>
-            @keyframes pulse-city { 0%, 100% { r: 5; opacity: 0.8; } 50% { r: 8; opacity: 0.4; } }
-            @keyframes pulse-hq { 0%, 100% { r: 6.5; opacity: 1; } 50% { r: 10; opacity: 0.5; } }
-            .city-pulse { animation: pulse-city 2.5s ease-in-out infinite; }
-            .hq-pulse { animation: pulse-hq 3s ease-in-out infinite; }
-            .city-label { font-size: 10px; font-weight: 600; fill: rgba(255,255,255,0.7); text-anchor: middle; }
-            .region-label { font-size: 48px; font-weight: 700; fill: rgba(177,200,255,0.18); pointer-events: none; }
-          </style>
-        </defs>
-        
-        <!-- Background labels -->
-        <text x="100" y="150" class="region-label" style="font-size:42px;fill:rgba(255,201,163,0.2)">AMERICAS</text>
-        <text x="560" y="150" class="region-label" style="font-size:42px">EUROPE</text>
-        <text x="820" y="480" class="region-label" style="font-size:42px">ASIA</text>
-      `;
+        globeMap.setAttribute('viewBox', '0 0 1000 600');
+        globeMap.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
-      // Draw connections from HQ to all cities
-      const hq = cities.find(c => c.region === 'hq');
-      cities.forEach(city => {
-        if (city.region !== 'hq') {
-          svgContent += `<line x1="${hq.x}" y1="${hq.y}" x2="${city.x}" y2="${city.y}" stroke="rgba(177,200,255,0.15)" stroke-width="1" opacity="0.5"/>`;
-        }
-      });
+        let svgContent = `
+          <defs>
+            <style>
+              @keyframes pulse-city { 0%, 100% { r: 5; opacity: 0.8; } 50% { r: 8; opacity: 0.4; } }
+              @keyframes pulse-hq { 0%, 100% { r: 6.5; opacity: 1; } 50% { r: 10; opacity: 0.5; } }
+              .city-pulse { animation: pulse-city 2.5s ease-in-out infinite; }
+              .hq-pulse { animation: pulse-hq 3s ease-in-out infinite; }
+              .city-label { font-size: 10px; font-weight: 600; fill: rgba(255,255,255,0.7); text-anchor: middle; }
+              .region-label { font-size: 48px; font-weight: 700; fill: rgba(177,200,255,0.18); pointer-events: none; }
+            </style>
+          </defs>
+          
+          <!-- Background labels -->
+          <text x="100" y="150" class="region-label" style="font-size:42px;fill:rgba(255,201,163,0.2)">AMERICAS</text>
+          <text x="560" y="150" class="region-label" style="font-size:42px">EUROPE</text>
+          <text x="820" y="480" class="region-label" style="font-size:42px">ASIA</text>
+        `;
 
-      // Draw connections between regional hubs
-      svgContent += `
-        <line x1="520" y1="200" x2="250" y2="220" stroke="rgba(255,201,163,0.15)" stroke-width="0.8"/>
-        <line x1="750" y1="380" x2="830" y2="220" stroke="rgba(202,189,255,0.15)" stroke-width="0.8"/>
-        <line x1="100" y1="260" x2="520" y2="200" stroke="rgba(255,201,163,0.15)" stroke-width="0.8"/>
-      `;
+        // Draw connections from HQ to all cities
+        const hq = cities.find(c => c.region === 'hq');
+        cities.forEach(city => {
+          if (city.region !== 'hq') {
+            svgContent += `<line x1="${hq.x}" y1="${hq.y}" x2="${city.x}" y2="${city.y}" stroke="rgba(177,200,255,0.15)" stroke-width="1" opacity="0.5"/>`;
+          }
+        });
 
-      // Draw cities
-      cities.forEach(city => {
-        const size = city.size || 5;
-        const isPulse = city.region === 'hq' ? 'hq-pulse' : 'city-pulse';
-        const color = regionColors[city.region];
-        const bgColor = regionBg[city.region];
+        // Draw connections between regional hubs
+        svgContent += `
+          <line x1="520" y1="200" x2="250" y2="220" stroke="rgba(255,201,163,0.15)" stroke-width="0.8"/>
+          <line x1="750" y1="380" x2="830" y2="220" stroke="rgba(202,189,255,0.15)" stroke-width="0.8"/>
+          <line x1="100" y1="260" x2="520" y2="200" stroke="rgba(255,201,163,0.15)" stroke-width="0.8"/>
+        `;
 
-        // Background glow
-        svgContent += `<circle cx="${city.x}" cy="${city.y}" r="${size + 4}" fill="${bgColor}" opacity="0.6"/>`;
-        
-        // Pulsing circle
-        svgContent += `<circle cx="${city.x}" cy="${city.y}" r="${size}" fill="${color}" class="${isPulse}"/>`;
-        
-        // City point
-        svgContent += `<circle cx="${city.x}" cy="${city.y}" r="2.5" fill="rgba(255,255,255,0.9)"/>`;
-        
-        // Label
-        if (city.region === 'hq') {
-          svgContent += `<text x="${city.x}" y="${city.y + 35}" class="city-label" fill="rgba(177,200,255,0.9)" font-weight="700">${city.label}</text>`;
-        } else {
-          svgContent += `<text x="${city.x}" y="${city.y + 25}" class="city-label">${city.label}</text>`;
-        }
-      });
+        // Draw cities
+        cities.forEach(city => {
+          const size = city.size || 5;
+          const isPulse = city.region === 'hq' ? 'hq-pulse' : 'city-pulse';
+          const color = regionColors[city.region];
+          const bgColor = regionBg[city.region];
 
-      globeMap.innerHTML = svgContent;
-    }
+          // Background glow
+          svgContent += `<circle cx="${city.x}" cy="${city.y}" r="${size + 4}" fill="${bgColor}" opacity="0.6"/>`;
+          
+          // Pulsing circle
+          svgContent += `<circle cx="${city.x}" cy="${city.y}" r="${size}" fill="${color}" class="${isPulse}"/>`;
+          
+          // City point
+          svgContent += `<circle cx="${city.x}" cy="${city.y}" r="2.5" fill="rgba(255,255,255,0.9)"/>`;
+          
+          // Label
+          if (city.region === 'hq') {
+            svgContent += `<text x="${city.x}" y="${city.y + 35}" class="city-label" fill="rgba(177,200,255,0.9)" font-weight="700">${city.label}</text>`;
+          } else {
+            svgContent += `<text x="${city.x}" y="${city.y + 25}" class="city-label">${city.label}</text>`;
+          }
+        });
+
+        globeMap.innerHTML = svgContent;
+      }
+    });
   </script>
 
   <!-- Progressive Contact Form Script -->
