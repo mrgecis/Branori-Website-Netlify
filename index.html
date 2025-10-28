@@ -833,6 +833,25 @@
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Hamburger Menu Toggle
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    
+    if (hamburgerBtn && mobileNav) {
+      hamburgerBtn.addEventListener('click', () => {
+        hamburgerBtn.classList.toggle('active');
+        mobileNav.classList.toggle('active');
+      });
+      
+      // Close menu when link is clicked
+      mobileNav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          hamburgerBtn.classList.remove('active');
+          mobileNav.classList.remove('active');
+        });
+      });
+    }
+
     // Reveal on scroll
     const revealEls = document.querySelectorAll('.reveal');
     const io = new IntersectionObserver((entries)=>{
@@ -1231,25 +1250,6 @@
             console.error('Form submission error:', e);
             alert('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
           }
-        });
-      }
-
-      // Hamburger Menu Toggle
-      const hamburgerBtn = document.getElementById('hamburgerBtn');
-      const mobileNav = document.getElementById('mobileNav');
-      
-      if (hamburgerBtn && mobileNav) {
-        hamburgerBtn.addEventListener('click', () => {
-          hamburgerBtn.classList.toggle('active');
-          mobileNav.classList.toggle('active');
-        });
-        
-        // Close menu when link is clicked
-        mobileNav.querySelectorAll('a').forEach(link => {
-          link.addEventListener('click', () => {
-            hamburgerBtn.classList.remove('active');
-            mobileNav.classList.remove('active');
-          });
         });
       }
     })();
