@@ -79,6 +79,11 @@
       background:linear-gradient(to bottom, rgba(7,11,17,.75), rgba(7,11,17,.35)); border-bottom:1px solid rgba(255,255,255,.06)}
     .container{max-width:1200px;margin:0 auto;padding:0 20px}
     nav{height:68px; display:flex; align-items:center; justify-content:space-between}
+    .hamburger{display:none;width:28px;height:28px;background:none;border:none;cursor:pointer;flex-direction:column;justify-content:space-around;padding:0}
+    .hamburger span{width:100%;height:2px;background:rgba(255,255,255,.8);display:block;border-radius:1px}
+    @media (max-width: 768px){
+      .hamburger{display:flex}
+    }
     .brand{display:flex;align-items:center;gap:12px;font-weight:600;letter-spacing:.4px}
     .badge{width:38px;height:38px;border-radius:14px;background:rgba(255,255,255,.08);
       border:1px solid var(--border); display:grid;place-items:center; box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
@@ -97,6 +102,9 @@
     .grad{background:linear-gradient(90deg, var(--brand1), var(--brand2), var(--brand3)); -webkit-background-clip:text; background-clip:text; color:transparent}
     .sub{color:var(--muted); max-width:720px}
     .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+    @media (max-width: 640px){
+      .actions .btn:nth-child(1){display:none}
+    }
     .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:14px;text-decoration:none;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);color:#fff}
     .btn:hover{background:rgba(255,255,255,.18)}
     .btn.ghost{background:transparent;border-color:rgba(255,255,255,.14)}
@@ -137,15 +145,68 @@
       .spark, .marquee { animation: none !important; }
       .orb { opacity: 0.3; }
     }
+    /* MOBILE OPTIMIZATIONS */
+    @media (max-width: 768px) {
+      html,body{overflow-x:hidden}
+      .orb.a{width:300px;height:300px;left:-80px;top:-100px}
+      .orb.b{width:350px;height:350px;right:-100px;bottom:-80px}
+      .orb.c{width:400px;height:400px}
+      nav{height:56px}
+      .brand{font-size:14px}
+      .nav a{display:none}
+      .call-top{display:none}
+      .container{padding:0 16px}
+      section{padding:40px 0}
+      .hero{padding:90px 0 30px}
+      h1{font-size:28px;line-height:1.15;margin:8px 0 6px}
+      .sub{font-size:14px;line-height:1.6}
+      .title{font-size:22px}
+      .subt{font-size:13px}
+      .cards{grid-template-columns:1fr;gap:12px}
+      .card{padding:16px;border-radius:14px}
+      .window{border-radius:18px;padding:12px}
+      .window-inner{border-radius:16px;padding:16px;min-height:auto}
+      #contactCard input{border-radius:12px;padding:16px 13px;font-size:16px}
+      #contactCard label{font-size:13px;color:rgba(255,255,255,.8)}
+      #contactCard .pc-field{margin-bottom:16px}
+      #contactCard button.btn{padding:16px 14px;min-height:50px;font-size:15px}
+      #restructuring{padding:50px 0}
+      #restructuring .flow{flex-wrap:wrap;justify-content:center;gap:30px;margin-top:40px}
+      #restructuring .flow-line{display:none}
+      #restructuring .flow-step{flex:0 1 auto}
+      #restructuring .flow-step .icon{width:60px;height:60px;margin:0 auto 12px}
+      #restructuring .flow-step .label{font-size:12px}
+    }
     /* Sections */
     section{padding:70px 0}
+    @media (max-width: 640px){
+      #global{padding:40px 0 15px !important}
+    }
     .title{font-size:28px;margin:0 0 6px}
     .subt{color:var(--muted);margin-top:4px}
     /* Services */
     .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
     @media (max-width: 980px){ .cards{grid-template-columns:1fr 1fr} }
-    @media (max-width: 640px){ .cards{grid-template-columns:1fr} }
+    @media (max-width: 640px){ 
+      .cards{
+        display:flex;
+        grid-template-columns:none;
+        overflow-x:auto;
+        gap:12px;
+        scroll-snap-type:x mandatory;
+        padding-bottom:8px;
+      }
+      .cards::-webkit-scrollbar{height:4px}
+      .cards::-webkit-scrollbar-track{background:transparent}
+      .cards::-webkit-scrollbar-thumb{background:rgba(177,200,255,.2);border-radius:2px}
+    }
     .card{border-radius:18px;background:var(--glass);border:1px solid var(--border);padding:20px;backdrop-filter: blur(12px); transition:transform .25s ease, background .25s ease}
+    @media (max-width: 640px){
+      .card{
+        flex:0 0 calc(100vw - 40px);
+        scroll-snap-align:start;
+      }
+    }
     .card:hover{transform:translateY(-3px); background:rgba(255,255,255,.09)}
     .icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid var(--border); margin-bottom:10px}
     .icon svg{width:26px;height:26px;opacity:.9}
@@ -159,11 +220,18 @@
     .blob{position:absolute;border-radius:999px;filter:blur(70px);opacity:.35;mix-blend:screen}
     .b1{width:380px;height:380px;left:-80px;top:-60px;background:radial-gradient(circle at 30% 30%, var(--brand1), rgba(106,168,255,0)); animation: float1 18s ease-in-out infinite}
     .b2{width:420px;height:420px;right:-120px;bottom:-100px;background:radial-gradient(circle at 60% 60%, #ff8db3, rgba(255,141,179,0)); animation: float2 22s ease-in-out infinite}
+    @media (max-width: 640px){
+      .b1{animation: float1 32s ease-in-out infinite}
+      .b2{animation: float2 38s ease-in-out infinite}
+    }
     @keyframes float1{0%{transform:translateY(0)}50%{transform:translateY(18px)}100%{transform:translateY(0)}}
     @keyframes float2{0%{transform:translate(0,0)}50%{transform:translate(-20px,10px)}100%{transform:translate(0,0)}}
     .mom-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:center}
     @media (max-width: 950px){ .mom-grid{grid-template-columns:1fr} }
     .pillx{display:inline-flex;align-items:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);white-space:nowrap;font-size:14px;margin:6px 6px 0 0}
+    @media (max-width: 640px){
+      .pillx{padding:8px 12px;font-size:13px;margin:4px 4px 0 0}
+    }
     .callout{border-radius:18px;border:1px solid var(--border);background:rgba(255,255,255,.06);padding:16px}
     /* Work */
     .work-head{display:flex;align-items:center;justify-content:space-between;gap:60px;margin-bottom:60px;flex-wrap:nowrap}
@@ -184,6 +252,23 @@
     /* Footer */
     footer{border-top:1px solid rgba(255,255,255,.08)}
     .ft{display:flex;gap:18px;align-items:center;justify-content:space-between;color:rgba(255,255,255,.65);font-size:14px;padding:26px 0;flex-wrap:wrap}
+    @media (max-width: 640px){
+      .ft{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:12px;
+        padding:20px 0;
+        align-items:flex-start;
+      }
+      .ft > div:first-child{
+        order:1;
+      }
+      .ft > div:last-child{
+        order:2;
+        display:flex;
+        gap:12px;
+      }
+    }
     .ft a{color:inherit;text-decoration:none}
     .ft a:hover{color:#fff}
     /* Reveal on scroll */
@@ -200,6 +285,31 @@
     }
     #contactCard input::placeholder{color:rgba(255,255,255,.45)}
     #contactCard input:focus{border-color:rgba(177,200,255,.5); box-shadow:0 0 0 3px rgba(177,200,255,.12)}
+    /* Fix for pc-form-2 inputs */
+    #pc-form-2 input{
+      background:rgba(255,255,255,.06) !important;
+      border:1px solid var(--border) !important;
+    }
+    #pc-form-2 input::placeholder{color:rgba(255,255,255,.45) !important}
+    #pc-form-2 input:focus{border-color:rgba(177,200,255,.5) !important; box-shadow:0 0 0 3px rgba(177,200,255,.12) !important}
+    /* pc-form-2 mobile stacked layout */
+    #pc-form-2 .pc-field{display:grid;gap:8px;margin-bottom:12px}
+    #pc-form-2 label{display:block;font-size:12px;color:rgba(255,255,255,.7);margin-bottom:4px}
+    @media (max-width: 640px){
+      #pc-form-2 .pc-field{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:6px;
+        margin-bottom:14px;
+      }
+      #pc-form-2 label{
+        display:block;
+        width:100%;
+      }
+      #pc-form-2 input{
+        width:100%;
+      }
+    }
     #contactCard .pc-hint{margin:10px 2px 0; font-size:12px; color:var(--muted)}
     #contactCard .pc-actions{display:flex; gap:10px; margin:4px 0 0}
     #contactCard .pc-success{
@@ -232,34 +342,43 @@
     #restructuring .flow-step.active .label {color:var(--brand1); font-weight:600;}
     @keyframes softPulse {0%,100%{box-shadow:0 0 30px rgba(177,200,255,.4), inset 0 0 20px rgba(177,200,255,.1)}50%{box-shadow:0 0 40px rgba(177,200,255,.6), inset 0 0 25px rgba(177,200,255,.15)}}
     #restructuring .flow-step.active .icon {animation:softPulse 2s ease-in-out infinite;}
-    /* iPhone 15 responsive optimizations */
-    @media (max-width: 390px) {
-      .container { padding: 0 15px; }
-      nav { height: 60px; }
-      .brand { gap: 10px; font-size: 14px; }
-      .badge { width: 32px; height: 32px; }
-      .badge svg { width: 16px; height: 16px; }
-      .nav a { margin-left: 16px; font-size: 13px; }
-      .call-top { margin-left: 12px; padding: 8px 12px; font-size: 13px; }
-      .hero { padding: 120px 0 30px; }
-      .hero-grid { gap: 24px; }
-      h1 { font-size: 38px; line-height: 1.1; }
-      .sub { font-size: 15px; }
-      .actions { gap: 10px; }
-      .btn { padding: 10px 14px; font-size: 14px; }
-      .cards { gap: 16px; }
-      .card { padding: 16px; }
-      .icon { width: 48px; height: 48px; margin-bottom: 8px; }
-      .icon svg { width: 22px; height: 22px; }
-      .momentum { padding: 24px; }
-      .mom-grid { gap: 16px; }
-      .pillx { padding: 8px 12px; font-size: 13px; margin: 4px 4px 0 0; }
-      .callout { padding: 14px; }
-      .contact { padding: 18px; }
-      #contactCard input { padding: 10px 12px; }
-      #contactCard .pc-hint { font-size: 11px; }
-      #contactCard .pc-actions { gap: 8px; }
-      .ft { padding: 20px 0; gap: 14px; font-size: 13px; }
+    /* Globe mobile fix */
+    .globe-container {
+      width: min(500px, 90vw) !important;
+      order: 2;
+    }
+    .globe-content {
+      order: 1;
+    }
+    .global-grid {
+      grid-template-columns: 1.1fr 1fr !important;
+    }
+    @media (max-width: 950px) {
+      .globe-container {
+        width: min(450px, 90vw) !important;
+        order: 2;
+      }
+      .globe-content {
+        order: 1;
+      }
+      .global-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 640px) {
+      .globe-container {
+        width: 100vw !important;
+        order: 2;
+      }
+      .globe-content {
+        order: 1;
+      }
+      #global {
+        padding: 50px 0 30px !important;
+      }
     }
   </style>
 </head>
@@ -284,6 +403,11 @@
           <a href="#services">Services</a>
           <a href="#contact">Contact</a>
         </div>
+        <button class="hamburger" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </nav>
     </div>
   </header>
@@ -510,9 +634,9 @@
     <!-- GLOBAL REACH - Limassol Hub -->
     <section id="global">
       <div class="container">
-        <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center">
+        <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center" class="global-grid">
           <!-- Globe -->
-          <div style="position:relative;aspect-ratio:1/1;width:min(500px,90vw);margin-inline:auto;filter:drop-shadow(0 20px 30px rgba(0,0,0,.4))">
+          <div style="position:relative;aspect-ratio:1/1;width:min(500px,90vw);margin-inline:auto;filter:drop-shadow(0 20px 30px rgba(0,0,0,.4))" class="globe-container">
             <svg style="width:100%;height:100%;overflow:visible" viewBox="0 0 500 500" aria-label="Global Network">
               <defs>
                 <radialGradient id="globeGlow" cx="50%" cy="50%" r="60%">
@@ -579,7 +703,7 @@
           </div>
 
           <!-- Content -->
-          <div class="reveal">
+          <div class="reveal globe-content">
             <h2 class="title" style="margin-bottom:12px">Limassol Hub</h2>
             <p class="subt" style="margin-bottom:20px;max-width:none">Branori operates from Limassol — strategically positioned at the intersection of Europe, Middle East, and Asia. From here, we connect dealflow, talent, and markets across three time zones with rapid decision-making.</p>
             
