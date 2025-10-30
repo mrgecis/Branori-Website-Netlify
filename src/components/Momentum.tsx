@@ -8,6 +8,22 @@ const features = [
   'AI strategy',
 ]
 
+const marketConditions = [
+  '💰 Rising interest rates create distressed opportunities',
+  '📈 Supply chain disruption affects SME valuations',
+  '⚡ Energy costs pressure manufacturing companies',
+  '🏦 Bank lending restrictions increase distressed assets',
+  '🌍 Geopolitical uncertainty drives portfolio optimization',
+  '🤖 AI transformation creates legacy business distress',
+]
+
+const opportunityFactors = [
+  'Lower competition from traditional PE funds',
+  'Motivated sellers with realistic expectations', 
+  'Government incentives for business restructuring',
+  'Access to skilled workforce from consolidation',
+]
+
 export function Momentum() {
   return (
     <section id="momentum" className="py-8 md:py-[70px] px-5">
@@ -34,10 +50,44 @@ export function Momentum() {
               <h3 className="text-[22px] md:text-[28px] font-semibold mb-2">
                 Momentum
               </h3>
-              <p className="text-muted-foreground text-[13px] md:text-[15px]">
+              <p className="text-muted-foreground text-[13px] md:text-[15px] mb-4">
                 We turn distressed equity into value.
               </p>
-              <div className="mt-3 md:mt-3 flex flex-wrap gap-1.5">
+
+              {/* Market Opportunity Section */}
+              <div className="mb-5 p-4 rounded-xl border border-[oklch(1_0_0_/_0.1)] bg-[oklch(1_0_0_/_0.03)]">
+                <h4 className="text-[15px] md:text-[16px] font-semibold mb-3 text-[oklch(0.78_0.12_250)]">
+                  🚀 Perfect Market Timing for Distressed M&A
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {marketConditions.map((condition, index) => (
+                    <div
+                      key={index}
+                      className="text-[11px] md:text-[12px] text-muted-foreground leading-relaxed"
+                    >
+                      {condition}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Key Advantages */}
+              <div className="mb-4 p-4 rounded-xl border border-[oklch(1_0_0_/_0.1)] bg-[oklch(1_0_0_/_0.03)]">
+                <h4 className="text-[14px] md:text-[15px] font-semibold mb-2 text-[oklch(0.75_0.10_290)]">
+                  ⚡ Current Opportunity Drivers:
+                </h4>
+                {opportunityFactors.map((factor, index) => (
+                  <div
+                    key={index}
+                    className="text-[11px] md:text-[12px] text-muted-foreground leading-relaxed mb-1"
+                  >
+                    • {factor}
+                  </div>
+                ))}
+              </div>
+
+              {/* Service Tags */}
+              <div className="mt-3 flex flex-wrap gap-1.5">
                 {features.map((feature, index) => (
                   <span
                     key={index}
@@ -47,10 +97,14 @@ export function Momentum() {
                   </span>
                 ))}
               </div>
-              <div className="mt-4 text-[13px] md:text-[15px] leading-relaxed">
-                <strong>Positioning:</strong> We advise investors. We are not a fund. We deliver
-                the plan and lead execution so that the asset emerges stabilized, focused and
-                investable.
+
+              {/* Positioning Statement */}
+              <div className="mt-4 p-3 rounded-lg border border-[oklch(0.78_0.12_250_/_0.3)] bg-[oklch(0.78_0.12_250_/_0.08)]">
+                <div className="text-[12px] md:text-[14px] leading-relaxed">
+                  <strong className="text-[oklch(0.78_0.12_250)]">Positioning:</strong> We advise investors. We are not a fund. We deliver
+                  the plan and lead execution so that the asset emerges stabilized, focused and
+                  investable.
+                </div>
               </div>
             </div>
             <div className="flex justify-center">
