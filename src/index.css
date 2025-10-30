@@ -73,11 +73,28 @@
   --radius-full: 9999px;
 }
 
+html {
+  background-color: oklch(0.08 0.02 250) !important;
+  color: oklch(1 0 0) !important;
+}
+
 body {
   @apply bg-background text-foreground;
+  background-color: oklch(0.08 0.02 250) !important;
+  color: oklch(1 0 0) !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Fallback für mobile Geräte wenn CSS-Variablen fehlschlagen */
+@supports not (color: oklch(0.08 0.02 250)) {
+  html, body {
+    background-color: #070b11 !important;
+    color: #ffffff !important;
+  }
 }
 
 .reveal {

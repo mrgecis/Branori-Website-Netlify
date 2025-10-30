@@ -18,10 +18,10 @@ function App() {
   }, [])
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden">
+    <div className="relative min-h-screen w-full overflow-x-hidden bg-background text-foreground">
       <BackgroundOrbs />
       <Header />
-      <main className="w-full overflow-x-hidden">
+      <main className="w-full overflow-x-hidden bg-background">
         <Hero />
         <Services />
         <RestructuringFlow />

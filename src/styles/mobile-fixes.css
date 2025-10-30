@@ -12,6 +12,8 @@ html {
   height: 100%;
   height: 100vh;
   height: 100dvh; /* Dynamic viewport height for mobile */
+  /* Force dark background on mobile to prevent white flash */
+  background-color: #070b11 !important;
 }
 
 body {
@@ -19,6 +21,40 @@ body {
   min-height: 100vh;
   min-height: 100dvh;
   position: relative;
+  /* Force dark background - critical for mobile scroll fix */
+  background-color: #070b11 !important;
+  color: #ffffff !important;
+}
+
+/* Critical mobile scroll fix - prevent white flash */
+#root {
+  background-color: #070b11 !important;
+  color: #ffffff !important;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Force all main containers to maintain dark theme */
+main, 
+section,
+.container {
+  background-color: transparent !important;
+}
+
+/* iOS specific fixes for scroll-induced color changes */
+@supports (-webkit-touch-callout: none) {
+  html, body, #root {
+    background-color: #070b11 !important;
+    -webkit-background-clip: padding-box !important;
+    background-clip: padding-box !important;
+  }
+  
+  /* Prevent iOS safari from changing colors on scroll */
+  body {
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    z-index: 0;
+  }
 }
 
 /* Prevent content from causing horizontal overflow */
