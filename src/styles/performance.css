@@ -1,0 +1,133 @@
+/* Performance optimizations for mobile devices */
+
+/* Enable hardware acceleration for critical animations */
+.reveal,
+[class*="orb"],
+[class*="animate"],
+.backdrop-blur-\[12px\],
+.backdrop-blur-\[8px\] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimize CSS for mobile performance */
+@media (max-width: 768px) {
+  /* Reduce expensive effects on mobile */
+  .backdrop-blur-\[12px\] {
+    backdrop-filter: blur(8px) !important;
+  }
+  
+  .backdrop-blur-\[8px\] {
+    backdrop-filter: blur(6px) !important;
+  }
+  
+  /* Simplify gradients on mobile */
+  [style*="linear-gradient"],
+  [style*="radial-gradient"] {
+    background-attachment: scroll !important;
+  }
+  
+  /* Disable expensive mix-blend modes on low-end devices */
+  @supports not (backdrop-filter: blur(1px)) {
+    .mix-blend-screen {
+      mix-blend-mode: normal !important;
+      opacity: 0.3 !important;
+    }
+  }
+  
+  /* Optimize transforms */
+  .transform {
+    will-change: auto !important;
+  }
+  
+  /* Reduce animation complexity */
+  * {
+    animation-timing-function: ease !important;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  
+  [class*="orb"] {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Optimize for touch devices */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  *:hover {
+    transform: none !important;
+    background-color: inherit !important;
+  }
+  
+  /* Optimize button touch targets */
+  button,
+  [role="button"],
+  a {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  /* Disable parallax on touch devices */
+  [style*="transform: translate"] {
+    transform: none !important;
+  }
+}
+
+/* Critical performance fixes */
+* {
+  /* Prevent layout shifts */
+  box-sizing: border-box;
+}
+
+/* Optimize images and media */
+img,
+video,
+canvas {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+/* Contain layout and paint for performance */
+section {
+  contain: layout style;
+}
+
+.container {
+  contain: layout;
+}
+
+/* Optimize scrolling performance */
+body {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Critical Web Vitals optimizations */
+.hero,
+.header {
+  contain: layout style paint;
+}
+
+/* Lazy load non-critical sections */
+.reveal:not(.visible) {
+  content-visibility: auto;
+  contain-intrinsic-size: 200px;
+}

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 interface IconData {
   orbit: number
@@ -10,6 +11,7 @@ interface IconData {
 
 export function OrbitAnimation() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -20,6 +22,11 @@ export function OrbitAnimation() {
 
     let rotation = 0
     let animationId: number
+    let lastFrameTime = 0
+    
+    // Reduce frame rate on mobile for better performance
+    const targetFPS = isMobile ? 30 : 60
+    const frameInterval = 1000 / targetFPS
 
     const iconData: IconData[] = [
       {
@@ -87,11 +94,19 @@ export function OrbitAnimation() {
       },
     ]
 
-    function drawOrbit() {
+    function drawOrbit(currentTime: number) {
       if (!canvas || !ctx) return
+      
+      // Throttle frame rate on mobile
+      if (currentTime - lastFrameTime < frameInterval) {
+        animationId = requestAnimationFrame(drawOrbit)
+        return
+      }
+      lastFrameTime = currentTime
 
       const rect = canvas.getBoundingClientRect()
-      const dpr = window.devicePixelRatio || 1
+      // Reduce DPR on mobile for better performance
+      const dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 2) : window.devicePixelRatio || 1
       const size = Math.min(rect.width, rect.height)
 
       if (canvas.width !== size * dpr || canvas.height !== size * dpr) {
@@ -165,14 +180,15 @@ export function OrbitAnimation() {
         ctx.fillText(item.label, x, y)
       })
 
-      rotation += 0.8
+      // Slower rotation on mobile for better performance
+      rotation += isMobile ? 0.4 : 0.8
       animationId = requestAnimationFrame(drawOrbit)
     }
 
-    drawOrbit()
+    drawOrbit(0)
 
     const handleResize = () => {
-      drawOrbit()
+      drawOrbit(0)
     }
 
     window.addEventListener('resize', handleResize)

@@ -35,8 +35,8 @@ export function Header() {
   }, [isMenuOpen])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[100] backdrop-blur-[12px] bg-[linear-gradient(to_bottom,_oklch(0.08_0.02_250_/_0.75),_oklch(0.08_0.02_250_/_0.35))] border-b border-[oklch(1_0_0_/_0.06)]">
-      <div className="max-w-[1200px] mx-auto px-5">
+    <header className="fixed top-0 left-0 right-0 w-full z-[100] backdrop-blur-[8px] md:backdrop-blur-[12px] bg-[linear-gradient(to_bottom,_oklch(0.08_0.02_250_/_0.75),_oklch(0.08_0.02_250_/_0.35))] border-b border-[oklch(1_0_0_/_0.06)]">
+      <div className="max-w-[1200px] w-full mx-auto px-4 md:px-5">
         <nav className="h-[68px] flex items-center justify-between">
           <div className="flex items-center gap-3 font-semibold tracking-wide">
             <svg

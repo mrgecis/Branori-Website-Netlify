@@ -22,4 +22,28 @@ export default defineConfig({
       '@': resolve(projectRoot, 'src')
     }
   },
+  build: {
+    target: 'es2020',
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-accordion', '@radix-ui/react-dialog'],
+        },
+      },
+    },
+    cssCodeSplit: true,
+    sourcemap: false,
+  },
+  server: {
+    host: true,
+    port: 5173,
+  },
 });
